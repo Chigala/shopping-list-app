@@ -19,10 +19,8 @@ import { useSnackBar } from '../snackbar'
 import { Snackbar } from '@mui/material'
 import { Alert } from '@mui/material'
 
-
-
 export const RegisterForm = ({ loginText, registerText, isRegister }) => {
-  const isWeb = !window.matchMedia('(max-width: 767px)').matches; 
+  const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const {
     visible,
     confirmVisible,
@@ -82,150 +80,76 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
               }
             >
               <div className='space-y-8'>
-                <div>
-                  <p className='text-[9px]'>Email</p>
-                  <div className='relative'>
-                    <input
-                      autoComplete='email'
-                      type='text'
-                      {...register('email')}
-                      name='email'
-                      placeholder='Enter your email address'
-                      className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
-                    />
-                    <p className='text-red-500 text-[8px]'>
-                      {errors.email?.message}
-                    </p>
+                <InputField
+                  register={register}
+                  errors={errors.email}
+                  inputType='text'
+                  labelName='Email'
+                  placeholder='Enter your email address'
+                  name='email'
+                  registerName='email'
+                  show={true}
+                  icon={
                     <MailOutlineIcon className='scale-50 absolute left-0 -top-1' />
-                  </div>
+                  }
+                />
+                <InputField
+                  register={register}
+                  errors={errors.username}
+                  inputType='text'
+                  labelName='Username'
+                  placeholder='Enter your username'
+                  name='username'
+                  registerName='username'
+                  show={true}
+                  icon={
+                    <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
+                  }
+                />
+
+                <div className='relative w-[95%]  md:w-4/5'>
+                  <PasswordInputField
+                    labelName='Password'
+                    placeholder='Enter your Password'
+                    register={register}
+                    errors={errors.password}
+                    name='password'
+                    visible={visible}
+                    registerName='password'
+                  />
+                  <PasswordFooter
+                    show={register}
+                    handleClick={handleClick}
+                    isWeb={isWeb}
+                    vertical={vertical}
+                    horizontal={horizontal}
+                    open={open}
+                    handleClose={handleClose}
+                    handleChangeVisible={handleChangeVisible}
+                    visible={visible}
+                  />
                 </div>
-                {isRegister && (
-                  <div>
-                    <p className='text-[9px]'>Username</p>
-                    <div className='relative'>
-                      <input
-                        type='text'
-                        {...register('username')}
-                        name='username'
-                        placeholder='Enter your username'
-                        className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
-                      />
-                      <p className='text-red-500 text-[8px]'>
-                        {errors.username?.message}
-                      </p>
-                      <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
-                    </div>
-                  </div>
-                )}
+
                 <div>
-                  <p className='text-[9px]'>Password</p>
                   <div className='relative w-[95%]  md:w-4/5'>
-                    <input
-                      type={visible ? 'text' : 'password'}
-                      autoComplete='current-password'
-                      placeholder='Enter your password'
-                      {...register('password')}
+                    <PasswordInputField
+                      labelName='Confirm Password'
+                      placeholder='Enter your Password'
+                      register={register}
+                      errors={errors.confirmPassword}
                       name='password'
-                      className='outline-none border-b-2 border-black px-6  w-full focus:border-[#FFC901]'
+                      visible={confirmVisible}
+                      registerName='confirmPassword'
                     />
-                    <p className='text-red-500 text-[8px]'>
-                      {errors.password?.message}
-                    </p>
-
-                    <HttpsOutlinedIcon className='scale-50 absolute left-0 -top-1' />
-                    {!isRegister && (
-                      <div className='flex justify-between mt-2 items-center'>
-                        <div className='flex items-center space-x-1'>
-                          <input
-                            type='checkbox'
-                            name='remember-me'
-                            className='accent-[#FFC901]'
-                          />
-                          <label
-                            htmlFor='remember-me'
-                            className='text-gray-500 text-[11px]'
-                          >
-                            Remember me
-                          </label>
-                        </div>
-                        <p
-                          onClick={handleClick(isWeb?{
-                            vertical: 'bottom',
-                            horizontal: 'left'
-                          }: {vertical:"top",horizontal:"center"})}
-                          className='text-gray-500 cursor-pointer text-[9px]'
-                        >
-                          forgot password?
-                        </p>
-                        <Snackbar
-                          anchorOrigin={{ vertical, horizontal }}
-                          open={open}
-                          autoHideDuration={6000}
-                          onClose={handleClose}
-                          key={vertical + horizontal}
-                        >
-                          <Alert
-                            onClose={handleClose}
-                            severity='success'
-                            sx={{ width: '100%' }}
-                          >
-                            A password reset Email has been sent to you
-                          </Alert>
-                        </Snackbar>
-                      </div>
-                    )}
-                    {visible ? (
-                      <div onClick={handleChangeVisible}>
-                        <VisibilityOutlinedIcon className='scale-75 absolute  right-0 text-gray-500  -top-1 cursor-pointer' />
-                      </div>
-                    ) : (
-                      <div onClick={handleChangeVisible}>
-                        <VisibilityOffOutlinedIcon className='scale-75 absolute  right-0 text-gray-500  -top-1 cursor-pointer' />
-                      </div>
-                    )}
+                    <ConfirmPasswordFooter
+                      confirmVisible={confirmVisible}
+                      handleChangeConfirmVisible={handleChangeConfirmVisible}
+                    />
                   </div>
                 </div>
-                {isRegister && (
-                  <div>
-                    <p className='text-[9px]'>Confirm password</p>
-                    <div className='relative w-[95%]  md:w-4/5'>
-                      <input
-                        type={confirmVisible ? 'text' : 'password'}
-                        {...register('confirmPassword')}
-                        name='confirmPassword'
-                        placeholder='Enter your password'
-                        className='outline-none border-b-2 border-black px-6 w-full focus:border-[#FFC901]'
-                      />
-                      <HttpsOutlinedIcon className='scale-50 absolute left-0 -top-1' />
-                      <p className='text-red-500 text-[8px]'>
-                        {errors.confirmPassword?.message}
-                      </p>
 
-                      {confirmVisible ? (
-                        <div onClick={handleChangeConfirmVisible}>
-                          <VisibilityOutlinedIcon className='scale-75 absolute cursor-pointer right-0 text-gray-500  -top-1' />
-                        </div>
-                      ) : (
-                        <div onClick={handleChangeConfirmVisible}>
-                          <VisibilityOffOutlinedIcon className='scale-75 absolute cursor-pointer text-gray-500 right-0 -top-1' />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
                 <div>
-                  <button
-                    type='submit'
-                    className='w-[95%]  md:w-4/5 text-center bg-[#FFC901] h-8 rounded-lg text-white '
-                  >
-                    {isLoading ? (
-                      <div className='scale-50 flex items-center justify-center'>
-                        <CircularProgress color='inherit' />
-                      </div>
-                    ) : (
-                      <>{isRegister ? 'Register' : 'Login'}</>
-                    )}
-                  </button>
+                  
                   {!isRegister && (
                     <div className='space-y-4'>
                       <div className='text-center w-[95%]  md:w-4/5 mt-2'>
@@ -252,3 +176,187 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     </>
   )
 }
+
+const InputField = ({
+  register,
+  errors,
+  name,
+  labelName,
+  placeholder,
+  inputType,
+  registerName,
+  show,
+  icon
+}) => {
+  return (
+    <>
+      {show && (
+        <div>
+          <p className='text-[9px]'>{labelName}</p>
+          <div className='relative'>
+            <input
+              autoComplete={name}
+              type={inputType}
+              {...register(`${registerName}`)}
+              name={name}
+              placeholder={placeholder}
+              className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
+            />
+            <p className='text-red-500 text-[8px]'>{errors?.message}</p>
+            {icon}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+const PasswordInputField = ({
+  labelName,
+  visible,
+  register,
+  placeholder,
+  registerName,
+  name,
+  errors
+}) => {
+  return (
+    <>
+      <p className='text-[9px]'>{labelName}</p>
+      <div className='relative'>
+        <input
+          type={visible ? 'text' : 'password'}
+          autoComplete='current-password'
+          placeholder={placeholder}
+          {...register(`${registerName}`)}
+          name={name}
+          className='outline-none border-b-2 border-black px-6  w-full focus:border-[#FFC901]'
+        />
+        <p className='text-red-500 text-[8px]'>{errors?.message}</p>
+        <HttpsOutlinedIcon className='scale-50 absolute left-0 -top-1' />
+      </div>
+    </>
+  )
+}
+
+const PasswordFooter = ({
+  show,
+  handleClick,
+  isWeb,
+  vertical,
+  horizontal,
+  open,
+  handleClose,
+  visible,
+  handleChangeVisible
+}) => {
+  return (
+    <div>
+      {show && (
+        <div className='flex justify-between mt-2 items-center'>
+          <div className='flex items-center space-x-1'>
+            <input
+              type='checkbox'
+              name='remember-me'
+              className='accent-[#FFC901]'
+            />
+            <label htmlFor='remember-me' className='text-gray-500 text-[11px]'>
+              Remember me
+            </label>
+          </div>
+          <p
+            onClick={handleClick(
+              isWeb
+                ? {
+                    vertical: 'bottom',
+                    horizontal: 'left'
+                  }
+                : { vertical: 'top', horizontal: 'center' }
+            )}
+            className='text-gray-500 cursor-pointer text-[9px]'
+          >
+            forgot password?
+          </p>
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            key={vertical + horizontal}
+          >
+            <Alert
+              onClose={handleClose}
+              severity='success'
+              sx={{ width: '100%' }}
+            >
+              A password reset Email has been sent to you
+            </Alert>
+          </Snackbar>
+        </div>
+      )}
+      {visible ? (
+        <div onClick={handleChangeVisible}>
+          <VisibilityOutlinedIcon className='scale-75 absolute  right-0 text-gray-500  top-3 cursor-pointer' />
+        </div>
+      ) : (
+        <div onClick={handleChangeVisible}>
+          <VisibilityOffOutlinedIcon className='scale-75 absolute  right-0 text-gray-500 top-3 cursor-pointer' />
+        </div>
+      )}
+    </div>
+  )
+}
+
+const ConfirmPasswordFooter = ({
+  confirmVisible,
+  handleChangeConfirmVisible
+}) => {
+  return (
+    <div>
+      {confirmVisible ? (
+        <div onClick={handleChangeConfirmVisible}>
+          <VisibilityOutlinedIcon className='scale-75 absolute cursor-pointer right-0 text-gray-500  top-3' />
+        </div>
+      ) : (
+        <div onClick={handleChangeConfirmVisible}>
+          <VisibilityOffOutlinedIcon className='scale-75 absolute cursor-pointer text-gray-500 right-0 top-3' />
+        </div>
+      )}
+    </div>
+  )
+}
+
+const LoginButton = ({isLoading,isRegister}) => {
+     return(
+      <button
+      type='submit'
+      className='w-[95%]  md:w-4/5 text-center bg-[#FFC901] h-8 rounded-lg text-white '
+    >
+      {isLoading ? (
+        <div className='scale-50 flex items-center justify-center'>
+          <CircularProgress color='inherit' />
+        </div>
+      ) : (
+        <>{isRegister ? 'Register' : 'Login'}</>
+      )}
+    </button>
+     )
+}
+// {isRegister && (
+//   <div>
+//     <p className='text-[9px]'>Username</p>
+//     <div className='relative'>
+//       <input
+//         type='text'
+//         {...register('username')}
+//         name='username'
+//         placeholder='Enter your username'
+//         className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
+//       />
+//       <p className='text-red-500 text-[8px]'>
+//         {errors.username?.message}
+//       </p>
+//       <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
+//     </div>
+//   </div>
+// )}
