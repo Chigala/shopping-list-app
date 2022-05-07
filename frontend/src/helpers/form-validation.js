@@ -44,3 +44,10 @@ export const changePasswordSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Password confirm is required')
 })
+
+export const ForgotPasswordSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required(),
+  })

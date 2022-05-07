@@ -9,10 +9,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import Badge from '@mui/material/Badge'
 import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useDispatch } from 'react-redux'
-import { updateAuth } from '../../redux/component-slice'
-import { useLogoutUserQuery } from '../../redux/api/user-slice'
-
+import { useSideBarLogic } from './sidebar-logic'
 
 const badgeValue = 5
 const hoverVariant = {
@@ -21,17 +18,7 @@ const hoverVariant = {
   }
 }
 export const Sidebar = () => {
-  const {data} = useLogoutUserQuery(); 
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    console.log("the logout button is working")
-    console.log(data.isLoggedIn)
-    
-    dispatch(updateAuth(data.isLoggedIn))
-    localStorage.setItem("auth", data.isLoggedIn); 
-    
-      
-  }
+  const {handleLogout} = useSideBarLogic()
   const location = useLocation()
   const getPathName = path => {
     return location.pathname === path

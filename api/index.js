@@ -3,7 +3,10 @@ const app = express();
 const User = require(".//database/models/user");
 const cors = require("cors")
 const passport = require("passport"); 
+//passport middlewares
 require("./middlewares/passportAuth/password-jwt")
+
+require("./middlewares/passportAuth/google-auth")
 const cookie = require("cookie-parser");
 const cookieSession = require("cookie-session");
 require("dotenv").config(); 

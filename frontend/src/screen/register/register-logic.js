@@ -6,8 +6,7 @@ export const useHandleRegister = () => {
     registerUser({ ...others })
     console.log(data)
   }
-
   return {
-    handleRegister
+    handleRegister, 
   }
 }

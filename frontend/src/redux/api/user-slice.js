@@ -39,12 +39,23 @@ export const userApi = createApi({
     }),
     forgotPassword: builder.mutation({
       query: data => ({
-        url: '/change-password',
+        url: '/forgot-password',
         method: 'POST',
         body: data,
         
       })
-    })
+    }),
+    googleLogin: builder.query({
+      query: () =>{
+        return { url: `/get-google-profile`, credentials: "include" };
+      }
+    }),
+
+    googleLogout: builder.query({
+      query: () =>{
+        return { url: `/googleLogout`, credentials: "include" };
+      }
+    }),
   })
 })
 
@@ -53,5 +64,8 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useLogoutUserQuery,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useGoogleLoginQuery,
+  useGoogleLogoutQuery
 } = userApi

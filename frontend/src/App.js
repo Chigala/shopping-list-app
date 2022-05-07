@@ -15,19 +15,21 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { updateAuth } from './redux/component-slice'
 import { CreatePassword } from './screen/create-password/create-password'
+import { ForgotPassword } from './screen/forgot-password/forgot-password'
+import { PositionedSnackbar,  } from './components/snackbar'
 
 function App () {
-  const user = useSelector(state => state.componentSlice.isAuth); 
-  const dispatch = useDispatch(); 
+  const user = useSelector(state => state.componentSlice.isAuth)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-   const loggedInUser = localStorage.getItem("auth"); 
-   if(loggedInUser){
-     const foundUser = JSON.parse(loggedInUser);
-     dispatch(updateAuth(foundUser))
-   }
-  },[])
-  
+    const loggedInUser = localStorage.getItem('auth')
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser)
+      dispatch(updateAuth(foundUser))
+    }
+  }, [])
+
   return (
     <>
       {user ? (
@@ -57,11 +59,14 @@ function App () {
         </Router>
       ) : (
         <Router>
+          <PositionedSnackbar/>
           <Routes>
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />
-            <Route path='/change-password/:id' element={<CreatePassword/>} />
-            <Route path='*' element={<Login/>} />
+
+            <Route path='/forgot-password' element={<ForgotPassword/>} />
+            <Route path='/change-password/:id' element={<CreatePassword />} />
+            <Route path='*' element={<Login />} />
           </Routes>
         </Router>
       )}

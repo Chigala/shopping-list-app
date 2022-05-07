@@ -2,16 +2,15 @@ import { useLoginUserMutation } from '../../redux/api/user-slice'
 import { useGetProfileQuery } from '../../redux/api/user-slice'
 import { useDispatch } from 'react-redux'
 import { updateAuth } from '../../redux/component-slice'
-import { useSnackBar } from '../../components/snackbar'
 
 export const useHandleLogin = () => {
-  const { handleClick } = useSnackBar()
   const [loginUser,{isLoading}] = useLoginUserMutation()
   const { data: userData } = useGetProfileQuery()
   const dispatch = useDispatch()
   const handleLogin = async data => {
     try {
       console.log('the button was pressed')
+      // console.log(data); 
       const result = await loginUser(data)
 
       if (result.data) {

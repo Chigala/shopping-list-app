@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config(); 
 
-const sendEmail = async (link) => {
+const sendEmail = async (link,email) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -16,7 +16,7 @@ const sendEmail = async (link) => {
     
       let mailOptions = {
         from: "JAPANESE INVESTORS",
-        to: "chigala11@gmail.com",
+        to:`${email}`,  
         subject: 'TESTING TESTING TESTING!!!',
         html: `<p>This is the link I always wanted to send to you and here is it <a href=${link}>click on this to change your password</a> </p>`
       };

@@ -5,19 +5,18 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import HttpsOutlinedIcon from '@mui/icons-material/HttpsOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
-import { ReactComponent as Logo } from '../../assets/icons/google-icon.svg'
+import { ReactComponent as Logo } from '../../../assets/icons/google-icon.svg'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { RegisterSchema } from '../../helpers/form-validation'
+import { RegisterSchema } from '../../../helpers/form-validation'
 import { useForm } from 'react-hook-form'
-import { useRegisterFormLogic } from './register-form-logic'
-import { useHandleRegister } from '../../screen/register/register-logic'
-import { useHandleLogin } from '../../screen/login/login-logic'
-import { LoginSchema } from '../../helpers/form-validation'
+import { useRegisterFormLogic } from '../register-form-logic'
+import { useHandleRegister } from '../../../screen/register/register-logic'
+import { useHandleLogin } from '../../../screen/login/login-logic'
+import { LoginSchema } from '../../../helpers/form-validation'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useSnackBar } from '../snackbar'
-import { Snackbar } from '@mui/material'
-import { Alert } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { updateSnackbar } from '../../../redux/snackbar'
 
 export const RegisterForm = ({ loginText, registerText, isRegister }) => {
   const isWeb = !window.matchMedia('(max-width: 767px)').matches
@@ -32,7 +31,6 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
 
   const { handleRegister } = useHandleRegister()
   const { handleLogin, isLoading } = useHandleLogin()
-  const { handleClick, handleClose, open, vertical, horizontal } = useSnackBar()
   const {
     register,
     handleSubmit,
@@ -46,7 +44,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     <>
       <div className='w-screen md:w-1/2 my-auto px-6'>
         <div className='space-y-6'>
-          <p className='text-[#FFC901] font-bold text-2xl'>
+          <p className='text-[#FFC901] font-bold text-4xl'>
             {isRegister ? 'Sign Up' : 'Sign In'}
           </p>
           <div className='space-y-4'>
@@ -119,12 +117,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                   />
                   <PasswordFooter
                     show={register}
-                    handleClick={handleClick}
                     isWeb={isWeb}
-                    vertical={vertical}
-                    horizontal={horizontal}
-                    open={open}
-                    handleClose={handleClose}
                     handleChangeVisible={handleChangeVisible}
                     visible={visible}
                   />
@@ -148,25 +141,9 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                   </div>
                 </div>
 
-                <div>
-                  
-                  {!isRegister && (
-                    <div className='space-y-4'>
-                      <div className='text-center w-[95%]  md:w-4/5 mt-2'>
-                        <p className='text-gray-500  text-[9px]'>
-                          Or continue with
-                        </p>
-                      </div>
-                      <div className='w-[95%]  md:w-4/5 shadow-md'>
-                        <div className='flex items-center justify-center'>
-                          <div className='scale-50'>
-                            <Logo />
-                          </div>
-                          <p>Sign in with google</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                <div className=''>
+                  <LoginButton isLoading={isLoading} />
+                  <GoogleLoginButton isRegister={false} />
                 </div>
               </div>
             </form>
@@ -177,7 +154,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
   )
 }
 
-const InputField = ({
+export const InputField = ({
   register,
   errors,
   name,
@@ -191,8 +168,8 @@ const InputField = ({
   return (
     <>
       {show && (
-        <div>
-          <p className='text-[9px]'>{labelName}</p>
+        <div className='space-y-2'>
+          <p className='text-base'>{labelName}</p>
           <div className='relative'>
             <input
               autoComplete={name}
@@ -210,8 +187,7 @@ const InputField = ({
     </>
   )
 }
-
-const PasswordInputField = ({
+export const PasswordInputField = ({
   labelName,
   visible,
   register,
@@ -239,17 +215,13 @@ const PasswordInputField = ({
   )
 }
 
-const PasswordFooter = ({
+export const PasswordFooter = ({
   show,
-  handleClick,
-  isWeb,
-  vertical,
-  horizontal,
-  open,
-  handleClose,
   visible,
+  isWeb,
   handleChangeVisible
 }) => {
+  const dispatch = useDispatch()
   return (
     <div>
       {show && (
@@ -265,33 +237,30 @@ const PasswordFooter = ({
             </label>
           </div>
           <p
-            onClick={handleClick(
-              isWeb
-                ? {
-                    vertical: 'bottom',
-                    horizontal: 'left'
-                  }
-                : { vertical: 'top', horizontal: 'center' }
-            )}
-            className='text-gray-500 cursor-pointer text-[9px]'
+            className='cursor-pointer'
+            onClick={() => {
+              console.log('the forgot button is working ')
+              dispatch(
+                isWeb
+                  ? updateSnackbar({
+                      snackbarOpen: true,
+                      snackbarType: 'success',
+                      snackbarText: 'Forgot password was successful',
+                      snackbarVertical: 'top',
+                      snackbarHorizontal: 'center'
+                    })
+                  : updateSnackbar({
+                      snackbarOpen: true,
+                      snackbarType: 'success',
+                      snackbarText: 'Forgot password was successful',
+                      snackbarVertical: 'top',
+                      snackbarHorizontal: 'center'
+                    })
+              )
+            }}
           >
             forgot password?
           </p>
-          <Snackbar
-            anchorOrigin={{ vertical, horizontal }}
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            key={vertical + horizontal}
-          >
-            <Alert
-              onClose={handleClose}
-              severity='success'
-              sx={{ width: '100%' }}
-            >
-              A password reset Email has been sent to you
-            </Alert>
-          </Snackbar>
         </div>
       )}
       {visible ? (
@@ -307,7 +276,7 @@ const PasswordFooter = ({
   )
 }
 
-const ConfirmPasswordFooter = ({
+export const ConfirmPasswordFooter = ({
   confirmVisible,
   handleChangeConfirmVisible
 }) => {
@@ -326,9 +295,14 @@ const ConfirmPasswordFooter = ({
   )
 }
 
-const LoginButton = ({isLoading,isRegister}) => {
-     return(
-      <button
+export const LoginButton = ({
+  isLoading,
+  isRegister,
+  ComponentButtonName,
+  isAnotherComponent
+}) => {
+  return (
+    <button
       type='submit'
       className='w-[95%]  md:w-4/5 text-center bg-[#FFC901] h-8 rounded-lg text-white '
     >
@@ -336,27 +310,39 @@ const LoginButton = ({isLoading,isRegister}) => {
         <div className='scale-50 flex items-center justify-center'>
           <CircularProgress color='inherit' />
         </div>
+      ) : isAnotherComponent ? (
+        `${ComponentButtonName}`
+      ) : isRegister ? (
+        'Sign up'
       ) : (
-        <>{isRegister ? 'Register' : 'Login'}</>
+        'Sign In '
       )}
     </button>
-     )
+  )
 }
-// {isRegister && (
-//   <div>
-//     <p className='text-[9px]'>Username</p>
-//     <div className='relative'>
-//       <input
-//         type='text'
-//         {...register('username')}
-//         name='username'
-//         placeholder='Enter your username'
-//         className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
-//       />
-//       <p className='text-red-500 text-[8px]'>
-//         {errors.username?.message}
-//       </p>
-//       <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
-//     </div>
-//   </div>
-// )}
+
+const GoogleLoginButton = ({ isRegister }) => {
+  const { handleSignInwithGoogle } = useRegisterFormLogic()
+  return (
+    <div>
+      {!isRegister && (
+        <div className='space-y-4'>
+          <div className='text-center w-[95%]  md:w-4/5 mt-2'>
+            <p className='text-gray-500  text-[9px]'>Or continue with</p>
+          </div>
+          <div
+            onClick={handleSignInwithGoogle}
+            className='w-[95%]  md:w-4/5 shadow-md'
+          >
+            <div className='flex items-center justify-center'>
+              <div className='scale-50'>
+                <Logo />
+              </div>
+              <p>Sign in with google</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
