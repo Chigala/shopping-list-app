@@ -91,6 +91,8 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                     <MailOutlineIcon className='scale-50 absolute left-0 -top-1' />
                   }
                 />
+{isRegister&&
+(
                 <InputField
                   register={register}
                   errors={errors.username}
@@ -104,6 +106,8 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                     <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
                   }
                 />
+)
+}
 
                 <div className='relative w-[95%]  md:w-4/5'>
                   <PasswordInputField
@@ -124,6 +128,8 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                 </div>
 
                 <div>
+{isRegister&&
+(
                   <div className='relative w-[95%]  md:w-4/5'>
                     <PasswordInputField
                       labelName='Confirm Password'
@@ -139,11 +145,17 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                       handleChangeConfirmVisible={handleChangeConfirmVisible}
                     />
                   </div>
+)
+}
                 </div>
 
                 <div className=''>
                   <LoginButton isLoading={isLoading} />
+{ !isRegister&&
+( 
                   <GoogleLoginButton isRegister={false} />
+ )
+ }
                 </div>
               </div>
             </form>
@@ -162,12 +174,10 @@ export const InputField = ({
   placeholder,
   inputType,
   registerName,
-  show,
   icon
 }) => {
   return (
     <>
-      {show && (
         <div className='space-y-2'>
           <p className='text-base'>{labelName}</p>
           <div className='relative'>
@@ -183,7 +193,6 @@ export const InputField = ({
             {icon}
           </div>
         </div>
-      )}
     </>
   )
 }
@@ -194,22 +203,24 @@ export const PasswordInputField = ({
   placeholder,
   registerName,
   name,
-  errors
+  errors, 
 }) => {
   return (
     <>
-      <p className='text-[9px]'>{labelName}</p>
-      <div className='relative'>
-        <input
-          type={visible ? 'text' : 'password'}
-          autoComplete='current-password'
-          placeholder={placeholder}
-          {...register(`${registerName}`)}
-          name={name}
-          className='outline-none border-b-2 border-black px-6  w-full focus:border-[#FFC901]'
-        />
-        <p className='text-red-500 text-[8px]'>{errors?.message}</p>
-        <HttpsOutlinedIcon className='scale-50 absolute left-0 -top-1' />
+      <div className='space-y-2'>
+        <p className='text-base'>{labelName}</p>
+        <div className='relative'>
+          <input
+            type={visible ? 'text' : 'password'}
+            autoComplete='current-password'
+            placeholder={placeholder}
+            {...register(`${registerName}`)}
+            name={name}
+            className='outline-none border-b-2 border-black px-6  w-full focus:border-[#FFC901]'
+          />
+          <p className='text-red-500 text-[8px]'>{errors?.message}</p>
+          <HttpsOutlinedIcon className='scale-50 absolute left-0 -top-1' />
+        </div>
       </div>
     </>
   )
@@ -325,7 +336,6 @@ const GoogleLoginButton = ({ isRegister }) => {
   const { handleSignInwithGoogle } = useRegisterFormLogic()
   return (
     <div>
-      {!isRegister && (
         <div className='space-y-4'>
           <div className='text-center w-[95%]  md:w-4/5 mt-2'>
             <p className='text-gray-500  text-[9px]'>Or continue with</p>
@@ -334,7 +344,7 @@ const GoogleLoginButton = ({ isRegister }) => {
             onClick={handleSignInwithGoogle}
             className='w-[95%]  md:w-4/5 shadow-md'
           >
-            <div className='flex items-center justify-center'>
+            <div className='flex items-center cursor-pointer justify-center'>
               <div className='scale-50'>
                 <Logo />
               </div>
@@ -342,7 +352,6 @@ const GoogleLoginButton = ({ isRegister }) => {
             </div>
           </div>
         </div>
-      )}
     </div>
   )
 }

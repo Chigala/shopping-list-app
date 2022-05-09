@@ -25,14 +25,12 @@ export const useRegisterFormLogic = () => {
 
   const handleSignInwithGoogle =  () => {
     window.open('http://localhost:5000/api/google/login', '_self')
-    // await  googleLogin()
   }
-  const googleLogin = () => {
-    if (data.isLoggedIn === true) {
+    if (isSuccess) {
+      console.log ("the dispatch worked")
       dispatch(updateAuth(data.isLoggedIn))
       localStorage.setItem('auth', data.isLoggedIn)
     }
-  }
   return {
     visible,
     confirmVisible,

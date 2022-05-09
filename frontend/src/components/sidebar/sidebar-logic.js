@@ -11,12 +11,10 @@ const {data:logoutData} = useGoogleLogoutQuery();
     console.log("the logout button is working")
     console.log(data.isLoggedIn)
     dispatch(updateAuth(data.isLoggedIn))
-    handleGoogleLogout(); 
+    // handleGoogleLogout(); 
     localStorage.setItem("auth", data.isLoggedIn); 
   }
-  const handleGoogleLogout = () => {
-     dispatch(updateAuth(logoutData.isLoggedIn)) 
-  }
+
   return {
       handleLogout
   }

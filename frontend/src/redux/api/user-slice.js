@@ -53,7 +53,7 @@ export const userApi = createApi({
 
     googleLogout: builder.query({
       query: () =>{
-        return { url: `/googleLogout`, credentials: "include" };
+        return { url: `/google/logout`, credentials: "include" };
       }
     }),
   })
