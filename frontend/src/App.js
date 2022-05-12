@@ -14,17 +14,16 @@ import { updateAuth } from './redux/component-slice'
 import { CreatePassword } from './screen/create-password/create-password'
 import { ForgotPassword } from './screen/forgot-password/forgot-password'
 import { PositionedSnackbar } from './components/snackbar'
-import  HomePageWrapper  from './screen/homepage-wrapper'
+import HomePageWrapper from './screen/homepage-wrapper'
 import { LoginWrapper } from './screen/login-wrapper'
 import { useGoogleLoginQuery } from './redux/api/user-slice'
 
 function App () {
-  const user = useSelector(state => state.componentSlice.isAuth)
+  // const user = useSelector(state => state.componentSlice.isAuth)
   const dispatch = useDispatch()
-  
+  const { isSuccess, data } = useGoogleLoginQuery()
   // const dispatch = useDispatch()
   // const [user, setuser] = useState(true)
-  // const { currentData, isSuccess } = useGoogleLoginQuery()
   // console.log(`this is the app.js user: ${user}`)
   // useEffect(() => {
   //   const loggedInUser = localStorage.getItem('auth')
@@ -35,8 +34,14 @@ function App () {
   // }, [])
 
   useEffect(() => {
-    dispatch(updateAuth(true)); 
-  }, [])
+    const handleAuthGoogleLogin = () => {
+      if (data === true) {
+        console.log(`it was successful: ${data}`)
+        localStorage.setItem('auth', true)
+      }
+    }
+    handleAuthGoogleLogin()
+  }, [data])
 
   return (
     <>
@@ -49,8 +54,8 @@ function App () {
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
           </Route>
-          <Route path='/homepage' element={<HomePageWrapper user={user} />}>
-            <Route index element={<Homepage />} />
+          <Route element={<HomePageWrapper />}>
+            <Route path='homepage' element={<Homepage />} />
             <Route path='history' element={<History />} />
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='itemform' element={<ItemForm />} />

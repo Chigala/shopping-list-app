@@ -25,33 +25,23 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-  failureRedirect: "http://localhost:3000/login", 
-  successRedirect: "http://localhost:3000/homepage"
-  
-  }),  
+    // failureRedirect: 'http://localhost:3000/login',
+    successRedirect: 'http://localhost:3000/homepage'
+  })
   // (req, res) => {
   //   // res.redirect("/api/get-google-profile")
   //   res.json( {user: req.user} )
   // }
 )
-router.get(
-  "/google/logout", (req,res) => {
-
-    req.logOut; 
-    console.log(`this is the logout req.user: ${req.user}`)
-    res.json({msg: "you have logged out", isLoggedIn: false})
-  }
-)
-router.get(
-  "/get-google-profile", (req,res) => {
-    console.log(`this is the req user: ${req.user}`); 
-    if(req.user){
-
+router.get('/google/logout', (req, res) => {
+  req.logout(); 
+  console.log(`this is the logout req.user: ${req.user}`)
+  res.json({ msg: 'you have logged out', isLoggedIn: false })
+})
+router.get('/get-google-profile', (req, res) => {
+  console.log(`this is the req user: ${req.user}`)
+  if (req.user) {
     res.status(200).json(true)
-    }else{
-      res.status(500).json(false)
-      
-    }
   }
-)
+})
 module.exports = router
