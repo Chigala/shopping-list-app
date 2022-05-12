@@ -18,15 +18,20 @@ const hoverVariant = {
   }
 }
 export const Sidebar = () => {
-  const {handleLogout} = useSideBarLogic()
+  const { handleLogout } = useSideBarLogic()
   const location = useLocation()
+  
   const getPathName = path => {
     return location.pathname === path
   }
   return (
     <>
-      <motion.div className='flex flex-col justify-between items-center h-screen py-4'>
-        <motion.div onClick={handleLogout} variants={hoverVariant} whileHover='hover'>
+      <motion.div className='flex flex-col  justify-between items-center h-screen py-4'>
+        <motion.div
+          onClick={handleLogout}
+          variants={hoverVariant}
+          whileHover='hover'
+        >
           <Tooltip
             title='Logout'
             placement='right-start'
@@ -40,10 +45,10 @@ export const Sidebar = () => {
             <Tooltip
               placement='right-start'
               title='Homepage'
-              className={`${getPathName('/') &&
+              className={`${getPathName('/homepage') &&
                 ' border-l-4 border-[#F9A109] rounded-sm '} pl-2`}
             >
-              <Link to='/'>
+              <Link to='/homepage'>
                 <FormatListBulletedIcon />
               </Link>
             </Tooltip>
@@ -52,10 +57,10 @@ export const Sidebar = () => {
             <Tooltip
               placement='right-start'
               title='History'
-              className={`${getPathName('/history') &&
+              className={`${getPathName('/homepage/history') &&
                 ' border-l-4 border-[#F9A109] rounded-sm '} pl-2`}
             >
-              <Link to='/history'>
+              <Link to='/homepage/history'>
                 <ReplayIcon />
               </Link>
             </Tooltip>
@@ -64,10 +69,10 @@ export const Sidebar = () => {
             <Tooltip
               placement='right-start'
               title='statistics'
-              className={`${getPathName('/dashboard') &&
+              className={`${getPathName('/homepage/dashboard') &&
                 ' border-l-4 border-[#F9A109] rounded-sm '} pl-2`}
             >
-              <Link to='/dashboard'>
+              <Link to='/homepage/dashboard'>
                 <AnalyticsIcon className='scale-100' />
               </Link>
             </Tooltip>
@@ -80,7 +85,7 @@ export const Sidebar = () => {
             className='pl-2 cursor-pointer'
           >
             <Badge badgeContent={badgeValue} color='error'>
-              <Link to="/listbar">
+              <Link to='/listbar'>
                 <ShoppingCartIcon className='scale-75' />
               </Link>
             </Badge>

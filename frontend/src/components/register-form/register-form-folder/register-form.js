@@ -26,7 +26,8 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     handleChangeConfirmVisible,
     handleChangeVisible,
     navigateToLogin,
-    navigateToRegister
+    navigateToRegister,
+    handleSignInwithGoogle
   } = useRegisterFormLogic()
 
   const { handleRegister } = useHandleRegister()
@@ -91,23 +92,21 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                     <MailOutlineIcon className='scale-50 absolute left-0 -top-1' />
                   }
                 />
-{isRegister&&
-(
-                <InputField
-                  register={register}
-                  errors={errors.username}
-                  inputType='text'
-                  labelName='Username'
-                  placeholder='Enter your username'
-                  name='username'
-                  registerName='username'
-                  show={true}
-                  icon={
-                    <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
-                  }
-                />
-)
-}
+                {isRegister && (
+                  <InputField
+                    register={register}
+                    errors={errors.username}
+                    inputType='text'
+                    labelName='Username'
+                    placeholder='Enter your username'
+                    name='username'
+                    registerName='username'
+                    show={true}
+                    icon={
+                      <PermIdentityIcon className='scale-50 absolute left-0 -top-1' />
+                    }
+                  />
+                )}
 
                 <div className='relative w-[95%]  md:w-4/5'>
                   <PasswordInputField
@@ -128,34 +127,33 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                 </div>
 
                 <div>
-{isRegister&&
-(
-                  <div className='relative w-[95%]  md:w-4/5'>
-                    <PasswordInputField
-                      labelName='Confirm Password'
-                      placeholder='Enter your Password'
-                      register={register}
-                      errors={errors.confirmPassword}
-                      name='password'
-                      visible={confirmVisible}
-                      registerName='confirmPassword'
-                    />
-                    <ConfirmPasswordFooter
-                      confirmVisible={confirmVisible}
-                      handleChangeConfirmVisible={handleChangeConfirmVisible}
-                    />
-                  </div>
-)
-}
+                  {isRegister && (
+                    <div className='relative w-[95%]  md:w-4/5'>
+                      <PasswordInputField
+                        labelName='Confirm Password'
+                        placeholder='Enter your Password'
+                        register={register}
+                        errors={errors.confirmPassword}
+                        name='password'
+                        visible={confirmVisible}
+                        registerName='confirmPassword'
+                      />
+                      <ConfirmPasswordFooter
+                        confirmVisible={confirmVisible}
+                        handleChangeConfirmVisible={handleChangeConfirmVisible}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className=''>
                   <LoginButton isLoading={isLoading} />
-{ !isRegister&&
-( 
-                  <GoogleLoginButton isRegister={false} />
- )
- }
+                  {!isRegister && (
+                    <GoogleLoginButton
+                      isRegister={false}
+                      handleSignInwithGoogle={handleSignInwithGoogle}
+                    />
+                  )}
                 </div>
               </div>
             </form>
@@ -178,21 +176,21 @@ export const InputField = ({
 }) => {
   return (
     <>
-        <div className='space-y-2'>
-          <p className='text-base'>{labelName}</p>
-          <div className='relative'>
-            <input
-              autoComplete={name}
-              type={inputType}
-              {...register(`${registerName}`)}
-              name={name}
-              placeholder={placeholder}
-              className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
-            />
-            <p className='text-red-500 text-[8px]'>{errors?.message}</p>
-            {icon}
-          </div>
+      <div className='space-y-2'>
+        <p className='text-base'>{labelName}</p>
+        <div className='relative'>
+          <input
+            autoComplete={name}
+            type={inputType}
+            {...register(`${registerName}`)}
+            name={name}
+            placeholder={placeholder}
+            className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
+          />
+          <p className='text-red-500 text-[8px]'>{errors?.message}</p>
+          {icon}
         </div>
+      </div>
     </>
   )
 }
@@ -203,7 +201,7 @@ export const PasswordInputField = ({
   placeholder,
   registerName,
   name,
-  errors, 
+  errors
 }) => {
   return (
     <>
@@ -332,26 +330,27 @@ export const LoginButton = ({
   )
 }
 
-const GoogleLoginButton = ({ isRegister }) => {
-  const { handleSignInwithGoogle } = useRegisterFormLogic()
+const GoogleLoginButton = () => {
   return (
     <div>
-        <div className='space-y-4'>
-          <div className='text-center w-[95%]  md:w-4/5 mt-2'>
-            <p className='text-gray-500  text-[9px]'>Or continue with</p>
-          </div>
-          <div
-            onClick={handleSignInwithGoogle}
-            className='w-[95%]  md:w-4/5 shadow-md'
-          >
-            <div className='flex items-center cursor-pointer justify-center'>
-              <div className='scale-50'>
-                <Logo />
-              </div>
-              <p>Sign in with google</p>
+      <div className='space-y-4'>
+        <div className='text-center w-[95%]  md:w-4/5 mt-2'>
+          <p className='text-gray-500  text-[9px]'>Or continue with</p>
+        </div>
+        <div
+          onClick={() => 
+            window.open('http://localhost:5000/api/google/login', '_self')
+          }
+          className='w-[95%]  md:w-4/5 shadow-md'
+        >
+          <div className='flex items-center cursor-pointer justify-center'>
+            <div className='scale-50'>
+              <Logo />
             </div>
+            <p>Sign in with google</p>
           </div>
         </div>
+      </div>
     </div>
   )
 }

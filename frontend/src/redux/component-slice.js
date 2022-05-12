@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-// const isLoggedIn = localStorage.getItem("auth");
 const initialState = {
     screen : "house",
     registerData: "",
     loginData:"",
-    isAuth: "", 
+    isAuth: false, 
     passwordParams: ""
 };
 
@@ -21,8 +20,8 @@ export const componentSlice = createSlice({
     loginFormData:(state,{payload}) => {
       state.loginData = payload;
     },
-     updateAuth:(state,{payload}) => {
-      state.isAuth = payload;
+     updateAuth:(state,action) => {
+      state.isAuth = action.payload;
     },
     updatePasswordParams: (state,{payload}) => {
       state.passwordParams = payload; 

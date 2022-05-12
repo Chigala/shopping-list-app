@@ -17,5 +17,5 @@ export const ListBar = () => {
         return <Cart />
     }
   }
-  return <div>{switchViews(screen)}</div>
+  return <div> {switchViews(screen)}</div>
 }
