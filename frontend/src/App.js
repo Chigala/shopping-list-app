@@ -25,6 +25,7 @@ function App () {
   const [auth, setauth] = useState(
     JSON.parse(localStorage.getItem('auth')) || false
   )
+  console.log(`this is the app auth state : ${auth}`)
   // const dispatch = useDispatch()
   // const [user, setuser] = useState(true)
   // console.log(`this is the app.js user: ${user}`)
@@ -40,10 +41,11 @@ function App () {
     const handleAuthGoogleLogin = () => {
       if (data === true) {
         console.log(`it was successful: ${data}`)
-        setauth(data)
-        localStorage.setItem('auth', data)
-      }
-    }
+        setauth(prev => !prev)
+      localStorage.setItem('auth',data) 
+      }else{
+        setauth(prev => !prev)
+      }    }
     handleAuthGoogleLogin()
     console.log(`this is the app state for the authValue: ${data}`)
   }, [data])
@@ -59,7 +61,7 @@ function App () {
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
           </Route>
-          <Route element={<HomePageWrapper user={auth} />}>
+          <Route element={<HomePageWrapper user={auth}/>}>
             <Route path='homepage' element={<Homepage />} />
             <Route path='history' element={<History />} />
             <Route path='dashboard' element={<Dashboard />} />

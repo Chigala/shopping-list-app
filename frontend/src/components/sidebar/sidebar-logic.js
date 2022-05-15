@@ -8,11 +8,10 @@ export const useSideBarLogic = () => {
    const navigate = useNavigate(); 
     const {isSuccess, data} = useGoogleLogoutQuery()  
   const handleLogout = () => {
-    console.log('the logout button is working')
   if(isSuccess){
-    console.log(data); 
     console.log("logout was successful")
-    navigate("/", { replace: true }); 
+    window.location.reload()
+    // navigate("/", { replace: true }); 
     localStorage.setItem("auth", false)
   }
   }
