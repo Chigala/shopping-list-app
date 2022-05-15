@@ -1,14 +1,11 @@
 import React from 'react'
-import { Outlet, Navigate } from 'react-router'
+import { Outlet, Navigate  } from 'react-router'
 import { ListBar } from '../components/listbar/listbar'
 import { Sidebar } from '../components/sidebar/sidebar'
 
-const HomePageWrapper = () => {
-  const user = localStorage.getItem("auth")
+const HomePageWrapper = ({ user }) => {
   console.log(`this is the homepagewrapper user: ${user}`)
-  return !user ? (
-    <Navigate  to='/' />
-  ) : (
+  return user ? (
     <>
       <div className='flex'>
         <div className=' w-fit bg-#FFFFFF'>
@@ -22,6 +19,8 @@ const HomePageWrapper = () => {
         </div>
       </div>
     </>
+  ) : (
+    <Navigate to='/' />
   )
 }
 export default HomePageWrapper

@@ -1,10 +1,12 @@
 import React from 'react'
-import { Outlet } from 'react-router'
+import { Outlet,Navigate } from 'react-router'
 
-export const LoginWrapper = () => {
+export const LoginWrapper = ({user}) => {
   return (
+   !user? 
     <>
     <Outlet/>
-    </>
+    </>: 
+    <Navigate to="/homepage"/>
   )
 }

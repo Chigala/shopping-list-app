@@ -17,6 +17,7 @@ import { LoginSchema } from '../../../helpers/form-validation'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useDispatch } from 'react-redux'
 import { updateSnackbar } from '../../../redux/snackbar'
+import { useNavigate } from 'react-router'
 
 export const RegisterForm = ({ loginText, registerText, isRegister }) => {
   const isWeb = !window.matchMedia('(max-width: 767px)').matches
@@ -331,6 +332,7 @@ export const LoginButton = ({
 }
 
 const GoogleLoginButton = () => {
+  const navigate = useNavigate()
   return (
     <div>
       <div className='space-y-4'>
@@ -338,9 +340,9 @@ const GoogleLoginButton = () => {
           <p className='text-gray-500  text-[9px]'>Or continue with</p>
         </div>
         <div
-          onClick={() => 
+          onClick={() => {
             window.open('http://localhost:5000/api/google/login', '_self')
-          }
+          }}
           className='w-[95%]  md:w-4/5 shadow-md'
         >
           <div className='flex items-center cursor-pointer justify-center'>

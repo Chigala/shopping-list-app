@@ -12,8 +12,8 @@ export const useSideBarLogic = () => {
   if(isSuccess){
     console.log(data); 
     console.log("logout was successful")
-    localStorage.setItem("auth", false)
     navigate("/", { replace: true }); 
+    localStorage.setItem("auth", false)
   }
   }
 

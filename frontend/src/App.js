@@ -22,6 +22,9 @@ function App () {
   // const user = useSelector(state => state.componentSlice.isAuth)
   const dispatch = useDispatch()
   const { isSuccess, data } = useGoogleLoginQuery()
+  const [auth, setauth] = useState(
+    JSON.parse(localStorage.getItem('auth')) || false
+  )
   // const dispatch = useDispatch()
   // const [user, setuser] = useState(true)
   // console.log(`this is the app.js user: ${user}`)
@@ -37,10 +40,12 @@ function App () {
     const handleAuthGoogleLogin = () => {
       if (data === true) {
         console.log(`it was successful: ${data}`)
-        localStorage.setItem('auth', true)
+        setauth(data)
+        localStorage.setItem('auth', data)
       }
     }
     handleAuthGoogleLogin()
+    console.log(`this is the app state for the authValue: ${data}`)
   }, [data])
 
   return (
@@ -48,13 +53,13 @@ function App () {
       <Router>
         <PositionedSnackbar />
         <Routes>
-          <Route path='/' element={<LoginWrapper />}>
+          <Route path='/' element={<LoginWrapper user={auth} />}>
             <Route index element={<Login />} />
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
           </Route>
-          <Route element={<HomePageWrapper />}>
+          <Route element={<HomePageWrapper user={auth} />}>
             <Route path='homepage' element={<Homepage />} />
             <Route path='history' element={<History />} />
             <Route path='dashboard' element={<Dashboard />} />

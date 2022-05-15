@@ -4,6 +4,7 @@ require('dotenv').config()
 const jwtSecret = process.env.JWT_SECRET
 const sendEmail = require('../services/nodemailer')
 const Jwt = require('jsonwebtoken')
+const Category = require('../database/models/category')
 
 //register the user using passport-local-mongoose plugin
 const register_user = async (req, res) => {
@@ -20,7 +21,14 @@ const register_user = async (req, res) => {
         if (err) {
           res.status(500).json(err)
         } else {
-          res.status(200).json('you have successfully registered')
+          Category.create([
+            { name: 'food and vegetables', belongsTo:msg._id },
+            { name: 'household and furniture', belongsTo:msg._id },
+            { name: 'school stuffs', belongsTo:msg._id }
+          ]); 
+          res
+            .status(200)
+            .json({ msg: 'you have successfully registered', user: msg })
         }
       }
     )
@@ -62,7 +70,7 @@ const login_user = async (req, res) => {
   }
 }
 
-//gets the user profile 
+//gets the user profile
 const get_profile = (req, res, next) => {
   res.json({
     message: 'you made it to the secure route',
@@ -77,8 +85,7 @@ const logout = (req, res) => {
     res.clearCookie('cookieToken', { domain: 'localhost:3000', path: '/' })
     res.status(200).json({ msg: 'you have been logged out', isLoggedIn: false })
   } else {
-
-    req.logout; 
+    req.logout
     res.status(200).json({ msg: 'you a not logged in' })
   }
 }
@@ -108,7 +115,7 @@ const forgot_password = async (req, res) => {
   }
 }
 
-//validates the token that was attached to the message sent to the email 
+//validates the token that was attached to the message sent to the email
 const email_token_validator = async (req, res) => {
   const id = req.params.id
 
@@ -126,7 +133,7 @@ const email_token_validator = async (req, res) => {
   }
 }
 
-//change password controller 
+//change password controller
 const change_password = async (req, res) => {
   const { password, userId } = req.body
   try {
@@ -144,8 +151,6 @@ const change_password = async (req, res) => {
     res.status(200).json("the user doesn't exist")
   }
 }
-
-
 
 module.exports = {
   register_user,
