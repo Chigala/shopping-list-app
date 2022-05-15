@@ -7,10 +7,11 @@ export default configureStore({
   reducer: {
     componentSlice: ListBarSlice,
      snackbarSlice,
-    [userApi.reducerPath]: userApi.reducer
+   [userApi.reducerPath]: userApi.reducer,
+
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(userApi.middleware)
+    getDefaultMiddleware().concat(userApi.middleware),
 })
 
 // setupListeners(configureStore.dispatch)

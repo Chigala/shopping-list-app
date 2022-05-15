@@ -19,49 +19,44 @@ import { LoginWrapper } from './screen/login-wrapper'
 import { useGoogleLoginQuery } from './redux/api/user-slice'
 
 function App () {
-  // const user = useSelector(state => state.componentSlice.isAuth)
   const dispatch = useDispatch()
-  const { isSuccess, data } = useGoogleLoginQuery()
-  const [auth, setauth] = useState(
-    JSON.parse(localStorage.getItem('auth')) || false
-  )
-  console.log(`this is the app auth state : ${auth}`)
+  const {data, isSuccess } = useGoogleLoginQuery()
   // const dispatch = useDispatch()
   // const [user, setuser] = useState(true)
   // console.log(`this is the app.js user: ${user}`)
-  // useEffect(() => {
-  //   const loggedInUser = localStorage.getItem('auth')
-  //   if (loggedInUser) {
-  //     const foundUser = JSON.parse(loggedInUser)
-  //     dispatch(updateAuth(foundUser))
-  //   }
-  // }, [])
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('auth')
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser)
+      dispatch(updateAuth(foundUser))
+    }
+  }, [])
 
   useEffect(() => {
     const handleAuthGoogleLogin = () => {
-      if (data === true) {
-        console.log(`it was successful: ${data}`)
-        setauth(prev => !prev)
-      localStorage.setItem('auth',data) 
+      if (isSuccess) {
+        console.log(`this is the data: ${data}`)
+        dispatch(updateAuth(data.user))
+        localStorage.setItem('auth', JSON.stringify(data.user))
       }else{
-        setauth(prev => !prev)
-      }    }
+        console.log("there was an error")
+      }
+    }
     handleAuthGoogleLogin()
-    console.log(`this is the app state for the authValue: ${data}`)
-  }, [data])
+  }, [isSuccess, data])
 
   return (
     <>
       <Router>
         <PositionedSnackbar />
         <Routes>
-          <Route path='/' element={<LoginWrapper user={auth} />}>
+          <Route path='/' element={<LoginWrapper  />}>
             <Route index element={<Login />} />
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
           </Route>
-          <Route element={<HomePageWrapper user={auth}/>}>
+          <Route element={<HomePageWrapper  />}>
             <Route path='homepage' element={<Homepage />} />
             <Route path='history' element={<History />} />
             <Route path='dashboard' element={<Dashboard />} />

@@ -35,14 +35,14 @@ router.get(
 router.get('/google/logout', (req, res) => {
   req.logout(); 
   console.log(`this is the logout req.user: ${req.user}`)
-  res.json({ msg: 'you have logged out', isLoggedIn: false })
+  res.json({ msg: 'you have logged out', user: req.user  })
 })
 router.get('/get-google-profile', (req, res) => {
   console.log(`this is the req user: ${req.user}`)
   if (req.user) {
-    res.status(200).json(true)
+    res.status(200).json({msg: "you have logged in",isLoggedIn: true,  user: req.user})
   }else{
-    res.status(500).json(false);
+    res.status(500).json({msg: "you are not authorized to login to this page, ",isLoggedIn: false,  user: req.user});
   }
 })
 module.exports = router

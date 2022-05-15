@@ -1,9 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
+const getDataFromLocalStorage = () => {
+  // return JSON.parse(localStorage.getItem("auth")) || {};
+  return ""
+}
 const initialState = {
     screen : "house",
     registerData: "",
     loginData:"",
-    isAuth: false, 
+    isAuth: getDataFromLocalStorage(), 
     passwordParams: ""
 };
 

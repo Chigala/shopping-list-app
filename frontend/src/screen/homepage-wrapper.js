@@ -1,9 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Outlet, Navigate  } from 'react-router'
 import { ListBar } from '../components/listbar/listbar'
 import { Sidebar } from '../components/sidebar/sidebar'
 
-const HomePageWrapper = ({ user }) => {
+const HomePageWrapper = () => {
+  const user = useSelector(state => state.componentSlice.isAuth)
   console.log(`this is the homepagewrapper user: ${user}`)
   return user ? (
     <>

@@ -2,6 +2,7 @@ const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const User = require('../../database/models/user')
 require('dotenv').config()
+const Category = require("../../database/models/category")
 
 
 var params = {
@@ -35,7 +36,13 @@ var Strategy = new GoogleStrategy(
           .save()
           .then(user => {
             done(null, user)
+          Category.create([
+            { name: 'food and vegetables', belongsTo:user._id },
+            { name: 'household and furniture', belongsTo:user._id },
+            { name: 'school stuffs', belongsTo:user._id }
+          ]); 
           })
+
       }
     })
   }
