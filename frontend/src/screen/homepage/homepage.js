@@ -33,7 +33,7 @@ export const Homepage = () => {
         ) : (
           data.map(value => {
             return (
-              <div className='space-y-3'>
+              <div key={value._id} className='space-y-3'>
                 <p className='text-sm font-semibold'> {value.name}</p>
                 <div className='container mx-auto'>
                   <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-y-6'>
