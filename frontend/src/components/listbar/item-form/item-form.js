@@ -1,18 +1,23 @@
 import React from 'react'
-import { useFormLogic } from './item-form-logic'
 import { useForm } from 'react-hook-form'
 import { useItemLogic } from '../item/item-logic'
 import { CategorySearchBar } from '../../category-searchBar'
+import { useDispatch, useSelector } from 'react-redux'
+import { openSearchBar,changeCategoryValue } from '../../../redux/component-slice'
 
 export const ItemForm = () => {
-  const [show, setShow] = React.useState(false)
+  const dispatch = useDispatch()
+  const selectedCategory = useSelector(state => state.componentSlice.sendSelectedCategory)
+
+  console.log(`this is the selectedCategory: ${selectedCategory}`)
   const [categoryValue, setCategoryValue] = React.useState("")
-  const { handleSubmitItemForm } = useItemLogic()
+  const { handleSubmitItemForm } = useItemLogic(categoryValue)
   const { register, handleSubmit } = useForm()
   const handleCategoryChange = (e) => {
           setCategoryValue(e.target.value)
           console.log(categoryValue)
   }
+  
   return (
     <div className='flex flex-col h-screen w-screen md:w-fit pt-3 pl-6 md:pl-4 pr-2 md:px-6 overflow-y-scroll'>
       <form onSubmit={handleSubmit(handleSubmitItemForm)}>
@@ -50,21 +55,23 @@ export const ItemForm = () => {
               id='formFile'
             />
           </div>
-          <div>
+          <div key={selectedCategory} >
             <p>category</p>
             <input
               type='text'
-              onFocus={()=>{
-                setShow(!show)
-              }}
+              defaultValue={selectedCategory}
+              name="category"
+              required
               onChange={(e) => {
+                dispatch(openSearchBar(true))
+                dispatch(changeCategoryValue(""))
                 handleCategoryChange(e)
               }}
               placeholder='Enter a category'
               className='outline-none rounded-md p-2 w-[90%] border-[#BDBDBD] border-2'
             />
           </div>
-          <CategorySearchBar categoryValue={categoryValue} show={show} />
+          <CategorySearchBar categoryValue={categoryValue}  />
         </div>
         <div className='sticky bottom-0  bg-white py-4'>
           <div className='flex justify-center space-x-4'>

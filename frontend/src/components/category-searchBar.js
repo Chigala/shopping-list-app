@@ -1,9 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useGetCategoryQuery } from '../redux/api/category-slice'
+import { openSearchBar,changeCategoryValue } from '../redux/component-slice'
 
-export const CategorySearchBar = ({ categoryValue, show }) => {
+export const CategorySearchBar = ({ categoryValue }) => {
   const state = useSelector(state => state.componentSlice.isAuth)
+  const show = useSelector(state => state.componentSlice.openCategorySearchBar)
+  const dispatch = useDispatch()
 
   const [sortedData, setSortedData] = React.useState('')
 
@@ -22,14 +25,23 @@ export const CategorySearchBar = ({ categoryValue, show }) => {
   return (
     <>
       {show && (
-        <div className='h-16 overflow-y-hidden'>
-          {sortedData.map(value => {
-            return (
-              <div className=' cursor-pointer hover:bg-gray-300 w-[90%] rounded-md p-2'>
-                <p>{value.name}</p>
-              </div>
-            )
-          })}
+        <div className='h-fit overflow-y-hidden border-2  rounded-md w-[90%]'>
+          {sortedData.length === 0
+            ?  dispatch(openSearchBar()) 
+            : sortedData.map(value => {
+                return (
+                  <div
+                  key={value._id}
+                    onClick={() => {
+                      dispatch(changeCategoryValue(value.name)) 
+                      dispatch(openSearchBar(false))
+                    }}
+                    className=' cursor-pointer hover:bg-gray-300 w-full  rounded-md p-2'
+                  >
+                    <p>{value.name}</p>
+                  </div>
+                )
+              })}
         </div>
       )}
     </>
