@@ -1,26 +1,56 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useItemLogic } from '../item/item-logic'
-import { CategorySearchBar } from '../../category-searchBar'
-import { useDispatch, useSelector } from 'react-redux'
-import { openSearchBar,changeCategoryValue } from '../../../redux/component-slice'
+import { useSelector } from 'react-redux'
+import { useGetCategoryQuery } from '../../../redux/api/category-slice'
 
 export const ItemForm = () => {
-  const dispatch = useDispatch()
-  const selectedCategory = useSelector(state => state.componentSlice.sendSelectedCategory)
-
-  console.log(`this is the selectedCategory: ${selectedCategory}`)
-  const [categoryValue, setCategoryValue] = React.useState("")
+  const [categoryValue, setCategoryValue] = React.useState('')
+  const [show, setShow] = React.useState(false)
   const { handleSubmitItemForm } = useItemLogic(categoryValue)
-  const { register, handleSubmit } = useForm()
-  const handleCategoryChange = (e) => {
-          setCategoryValue(e.target.value)
-          console.log(categoryValue)
+  const value = useSelector(state => state.componentSlice.itemData)
+
+  const { register, setValue, handleSubmit } = useForm({
+    defaultValues: {
+      name: value.name,
+      category: value.categoryName,
+      image: value.photoUrl,
+      description: value.description
+    }
+  })
+
+  const handleChange = e => {
+    setValue('category', `${e.target.value}`)
+    setCategoryValue(e.target.value)
+    setShow(true)
   }
-  
+  const handleInputBlur = () => {
+    setTimeout(() => {
+      setShow(false)
+    }, 100)
+  }
+  const state = useSelector(state => state.componentSlice.isAuth)
+
+  const [sortedData, setSortedData] = React.useState('')
+
+  const { data } = useGetCategoryQuery(state._id)
+
+  React.useEffect(() => {
+    const displaySearchedCategory = () => {
+      const sortedCategory = data.filter(value =>
+        value.name.toLowerCase().includes(categoryValue.toLowerCase())
+      )
+      setSortedData(sortedCategory.splice(0, 5))
+    }
+    displaySearchedCategory()
+  }, [categoryValue, data])
+
   return (
     <div className='flex flex-col h-screen w-screen md:w-fit pt-3 pl-6 md:pl-4 pr-2 md:px-6 overflow-y-scroll'>
-      <form onSubmit={handleSubmit(handleSubmitItemForm)}>
+      <form
+        encType='multipart/form-data'
+        onSubmit={handleSubmit(handleSubmitItemForm)}
+      >
         <div className='flex-1 mb-12 space-y-12 md:space-y-4'>
           <p className='font-semibold text-2xl'>Add a new item</p>
 
@@ -55,23 +85,42 @@ export const ItemForm = () => {
               id='formFile'
             />
           </div>
-          <div key={selectedCategory} >
+
+          <div>
             <p>category</p>
             <input
               type='text'
-              defaultValue={selectedCategory}
-              name="category"
-              required
-              onChange={(e) => {
-                dispatch(openSearchBar(true))
-                dispatch(changeCategoryValue(""))
-                handleCategoryChange(e)
-              }}
+              {...register('category')}
+              name='category'
+              onChange={handleChange}
+              onBlur={handleInputBlur}
               placeholder='Enter a category'
               className='outline-none rounded-md p-2 w-[90%] border-[#BDBDBD] border-2'
             />
           </div>
-          <CategorySearchBar categoryValue={categoryValue}  />
+
+          <div>
+            {show && (
+              <div className='h-fit overflow-y-hidden border-2  rounded-md w-[90%]'>
+                {sortedData.length === 0
+                  ? setShow(false)
+                  : sortedData.map(value => {
+                      return (
+                        <div
+                          key={value._id}
+                          onClick={() => {
+                            setShow(false)
+                            setValue('category', `${value.name}`)
+                          }}
+                          className=' cursor-pointer hover:bg-gray-300 w-full  rounded-md p-2'
+                        >
+                          <p>{value.name}</p>
+                        </div>
+                      )
+                    })}
+              </div>
+            )}
+          </div>
         </div>
         <div className='sticky bottom-0  bg-white py-4'>
           <div className='flex justify-center space-x-4'>

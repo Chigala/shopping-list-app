@@ -4,7 +4,10 @@ import AddIcon from '@mui/icons-material/Add'
 import { useGetCategoryQuery } from '../../redux/api/category-slice'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@mui/material'
+import {useHomepageLogic} from "./homepage-logic"
+
 export const Homepage = () => {
+  const{handleSendDataToItemPage} = useHomepageLogic()
   const state = useSelector(state => state.componentSlice.isAuth)
   const { data, isFetching, isLoading, error } = useGetCategoryQuery(state._id)
   console.log(data)
@@ -33,13 +36,13 @@ export const Homepage = () => {
         ) : (
           data.map(value => {
             return (
-              <div key={value._id} className='space-y-3'>
+              <div  key={value._id} className='space-y-3'>
                 <p className='text-sm font-semibold'> {value.name}</p>
                 <div className='container mx-auto'>
                   <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-y-6'>
                     {value.items.length === 0?  ( <p>oops! No item</p> ): value.items.map(product => {
                       return (
-                        <div className='flex group justify-around py-3 px-4 md:px-4 lg:px-8 w-fit items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white'>
+                        <div key={product._id} onClick={() => handleSendDataToItemPage(product)} className='flex group justify-around py-3 px-4 md:px-4 lg:px-8 w-fit items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white'>
                           <p>{product.name}</p>
                           <AddIcon className='text-[#C0C1C4] group-hover:text-white scale-75' />
                         </div>

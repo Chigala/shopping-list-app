@@ -1,23 +1,25 @@
-
 import { userApi } from './user-slice'
 
 export const productApi = userApi.injectEndpoints({
   endpoints: builder => ({
     getProduct: builder.query({
-      query: (id) =>{
-          return {
-              url: `/product/${id}`, 
-          }
-      }
+      query: id => {
+        return {
+          url: `/product/${id}`
+        }
+      },
+      providesTags: ['Product']
     }),
     createProduct: builder.mutation({
-      query: (name, id) => ({
-        url: '/product/',
-        method: 'POST',
-        body: name,
-        params: id,
-      })
+      query: ( {formData,id}  ) => {
+        return {
+          url: `/product/${id}`,
+          method: 'POST',
+          body: formData
+        }
+      },
+      invalidatesTags: ['Category','Product']
     })
   })
 })
-export const { useCreateCategoryMutation,useGetCategoryQuery } = productApi
+export const { useCreateProductMutation, useGetProductQuery } = productApi

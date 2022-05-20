@@ -1,21 +1,15 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarScreen } from '../../../redux/component-slice'
-import {useFormLogic } from "../../listbar/item-form/item-form-logic"
-import { useSelector } from 'react-redux'
-import { changeCategoryValue } from '../../../redux/component-slice'
+import { useFormLogic } from '../../listbar/item-form/item-form-logic'
+import { useCreateProductMutation } from '../../../redux/api/product-slice'
 
-export const useItemLogic = (catgoryValue) => {
- const{handleChangeScreen} = useFormLogic() 
-  // const [data, setData] = useState({
-  //   name:"", 
-  //   image:"", 
-  //   description: "", 
-  //   category: "", 
-    
-  // })
+export const useItemLogic = catgoryValue => {
+  const { handleChangeScreen } = useFormLogic()
+
+  const [sendProduct] = useCreateProductMutation()
   const dispatch = useDispatch()
-
-  const selectedCategory = useSelector(state => state.componentSlice.sendSelectedCategory)
+  const user = useSelector(state => state.componentSlice.isAuth)
+  const id = user._id
   const handleBack = () => {
     const data = 'item-form'
     dispatch(changeSidebarScreen(data))
@@ -24,20 +18,23 @@ export const useItemLogic = (catgoryValue) => {
     const data = 'default'
     dispatch(changeSidebarScreen(data))
   }
-  const handleSubmitItemForm = (data) => {
+  const handleSubmitItemForm = data => {
     handleChangeScreen()
-    const categoryData = {
-      category: selectedCategory||catgoryValue
-    }
-    console.log(`this is the handleForm submit categoryVAlue: ${catgoryValue}`)
-    console.log("the form is submitting")
-    console.log({...data,...categoryData})
-    dispatch(changeCategoryValue(""))
+    handleSendProduct(data)
+  }
+
+  const handleSendProduct = async data => {
+    console.log('the product has been sent ')
+    const formData = new FormData()
+    formData.append('image', data.image[0])
+    formData.append('name', data.name)
+    formData.append('category', data.category)
+    formData.append('description', data.description)
+    await sendProduct({ formData, id })
   }
   return {
     handleBack,
-    handleAddToList, 
-    handleSubmitItemForm,
-    
+    handleAddToList,
+    handleSubmitItemForm
   }
 }

@@ -4,7 +4,7 @@ const productController = require("../controller/product-controller")
 const upload = require("../services/multer")
 
 //creating a product 
-router.post("/product/:user/:category",upload.single("image"), productController.create_product)
+router.post("/product/:user", upload.single("image"), productController.create_product)
 //updating a product
 router.put("/product/:id",upload.single("image"),  productController.update_product)
 //deleting a product

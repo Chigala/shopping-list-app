@@ -3,20 +3,21 @@ import { userApi } from './user-slice'
 export const categoryApi = userApi.injectEndpoints({
   endpoints: builder => ({
     getCategory: builder.query({
-      query: (id) =>{
-          return {
-              url: `/category/${id}`, 
-          }
-      }
+      query: id => {
+        return {
+          url: `/category/${id}`
+        }
+      },
+      providesTags: ['Category']
     }),
     createCategory: builder.mutation({
-      query: (name, id) => ({
-        url: '/category/',
+      query: ({ id, data }) => ({
+        url: `/category/${id}`,
         method: 'POST',
-        body: name,
-        params: id,
-      })
+        body: data
+      }),
+      invalidatesTags: ['Category']
     })
   })
 })
-export const { useCreateCategoryMutation,useGetCategoryQuery } = categoryApi
+export const { useCreateCategoryMutation, useGetCategoryQuery } = categoryApi

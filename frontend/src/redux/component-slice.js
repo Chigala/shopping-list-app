@@ -10,7 +10,8 @@ const initialState = {
   isAuth: getDataFromLocalStorage(),
   passwordParams: '',
   openCategorySearchBar: false,
-  sendSelectedCategory: ''
+  sendSelectedCategory: '',
+  itemData: {}
 }
 
 export const componentSlice = createSlice({
@@ -37,6 +38,9 @@ export const componentSlice = createSlice({
     },
     changeCategoryValue: (state, { payload }) => {
       state.sendSelectedCategory = payload
+    },
+    sendDataToItem: (state, {payload}) => {
+      state.itemData = payload; 
     }
   }
 })
@@ -48,7 +52,8 @@ export const {
   updateAuth,
   updatePasswordParams,
   openSearchBar,
-  changeCategoryValue
+  changeCategoryValue,
+  sendDataToItem,
 } = componentSlice.actions
 
 export default componentSlice.reducer

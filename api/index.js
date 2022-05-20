@@ -1,4 +1,5 @@
 const express = require("express"); 
+const bodyParser = require("body-parser")
 const app = express();
 const User = require(".//database/models/user");
 const cors = require("cors")
@@ -28,6 +29,9 @@ const productRoute = require("./routes/product");
 
 //json parser
 app.use(express.json());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+// app.use(multer().array())
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true
