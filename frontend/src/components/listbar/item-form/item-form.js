@@ -37,6 +37,10 @@ export const ItemForm = () => {
 
   React.useEffect(() => {
     const displaySearchedCategory = () => {
+      console.log(`this is the data: ${data}`)
+      
+      const mapped = data.map(value=>value.name)
+      console.log(mapped); 
       const sortedCategory = data.filter(value =>
         value.name.toLowerCase().includes(categoryValue.toLowerCase())
       )
@@ -107,14 +111,14 @@ export const ItemForm = () => {
                   : sortedData.map(value => {
                       return (
                         <div
-                          key={value._id}
+                          key={value?._id}
                           onClick={() => {
                             setShow(false)
                             setValue('category', `${value.name}`)
                           }}
                           className=' cursor-pointer hover:bg-gray-300 w-full  rounded-md p-2'
                         >
-                          <p>{value.name}</p>
+                          <p>{value?.name}</p>
                         </div>
                       )
                     })}

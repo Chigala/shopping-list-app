@@ -1,6 +1,7 @@
 const Product = require('../database/models/product')
 const cloudinary = require('../services/cloudinary-config')
 const Category = require('../database/models/category')
+const mongoose = require('mongoose')
 
 //create a product
 const create_product = async (req, res) => {
@@ -12,6 +13,29 @@ const create_product = async (req, res) => {
     })
   }
   const category = await Category.findOne({ name: req.body.category })
+  // const productId = mongoose.Types.ObjectId(`${req.body.id}`)
+  // const product = await Product.findById(productId)
+
+  //if there is a product id already, update the product else you create a new product
+  // if (product) {
+  //   update_product()
+  //   // await cloudinary.uploader.destroy(product.cloudinaryId)
+  //   // product.name = req.body.name
+  //   // product.description = req.body.description
+  //   // product.photoUrl = result?.secure_url
+  //   // product.categoryName = req.body.category
+  //   // await product.save()
+
+  //   // if (!category.items.includes(product._id)) {
+  //   //   category.items.push(product._id)
+  //   //   await category.save()
+  //   //     const newCategory = await Category.findOneAndUpdate(
+  //   //       { id: product.category },
+  //   //       { $pull: { items: product._id } }
+  //   //     )
+  //   // }
+  //   // res.status(200).json(product)
+  // }
   if (category) {
     const product = await new Product({
       name: req.body.name,
@@ -51,7 +75,9 @@ const create_product = async (req, res) => {
 //update the products
 
 const update_product = async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id)
+  const product = await Product.findById(req.params.id)
+
+  const category = await Category.findOne({ name: req.body.category })
   await cloudinary.uploader.destroy(product.cloudinaryId)
   let result
   if (req.file) {
@@ -59,19 +85,64 @@ const update_product = async (req, res) => {
       folder: 'shopping list images'
     })
   }
-  const data = {
-    name: req.body.name || product.name,
-    description: req.body.description || product.description,
-    imageUrl: result?.secure_url || product.imageUrl,
-    completed: req.body.completed || false,
-    cloudinaryId: result?.public_id || product.cloudinaryId
+  if (category) {
+    if (!category.items.includes(product._id)) {
+      console.log('it is calling the function')
+      category.items.push(product._id)
+
+      await category.save()
+      await Category.findOneAndUpdate(
+        { name: product.categoryName },
+        { $pull: { items: product._id } }
+      )
+    }
+    const data = {
+      name: req.body.name || product.name,
+      description: req.body.description || product.description,
+      imageUrl: result?.secure_url || product.imageUrl,
+      completed: req.body.completed || false,
+      cloudinaryId: result?.public_id || product.cloudinaryId,
+      categoryName: req.body.category || product.categoryName
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      data,
+      {
+        new: true
+      }
+    )
+
+    res.status(200).send(updatedProduct)
+  } else {
+    const category = await new Category({
+      name: req.body.category,
+      belongsTo: product.belongsTo
+    })
+    const data = {
+      name: req.body.name || product.name,
+      description: req.body.description || product.description,
+      imageUrl: result?.secure_url || product.imageUrl,
+      completed: req.body.completed || false,
+      cloudinaryId: result?.public_id || product.cloudinaryId,
+      categoryName: req.body.category || product.categoryName
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      data,
+      {
+        new: true
+      }
+    )
+
+    category.items.push(updatedProduct._id)
+    await category.save()
+    await Category.findOneAndUpdate(
+      { name: product.categoryName },
+      { $pull: { items: product._id } }
+    )
+
+    res.status(200).send(updatedProduct)
   }
-
-  const updatedProduct = await Product.findByIdAndUpdate(req.params.id, data, {
-    new: true
-  })
-
-  res.status(200).send(updatedProduct)
 }
 
 //delete a product
