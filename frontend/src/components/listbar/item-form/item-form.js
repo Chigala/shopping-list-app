@@ -4,6 +4,12 @@ import { useItemLogic } from '../item/item-logic'
 import { useSelector } from 'react-redux'
 import { useGetCategoryQuery } from '../../../redux/api/category-slice'
 
+
+/*
+TODO:
+- set the fetch call to come from the server then when it is refetching you show a circular progress indicator 
+
+ */
 export const ItemForm = () => {
   const [categoryValue, setCategoryValue] = React.useState('')
   const [show, setShow] = React.useState(false)

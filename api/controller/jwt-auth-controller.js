@@ -5,6 +5,7 @@ const jwtSecret = process.env.JWT_SECRET
 const sendEmail = require('../services/nodemailer')
 const Jwt = require('jsonwebtoken')
 const Category = require('../database/models/category')
+const randomWords = require('random-words')
 
 //register the user using passport-local-mongoose plugin
 const register_user = async (req, res) => {
@@ -22,10 +23,15 @@ const register_user = async (req, res) => {
           res.status(500).json(err)
         } else {
           Category.create([
-            { name: 'food and vegetables', belongsTo:msg._id },
-            { name: 'household and furniture', belongsTo:msg._id },
-            { name: 'school stuffs', belongsTo:msg._id }
-          ]); 
+            { name: 'food and vegetables', belongsTo: msg._id },
+            { name: 'household and furniture', belongsTo: msg._id },
+            { name: 'school stuffs', belongsTo: msg._id }
+          ])
+          const randomListName = randomWords({ exactly: 1, wordsPerString: 2 })
+           List.create({
+            name: randomListName[0],
+            belongsTo: user._id
+          })
           res
             .status(200)
             .json({ msg: 'you have successfully registered', user: msg })

@@ -11,7 +11,8 @@ const initialState = {
   passwordParams: '',
   openCategorySearchBar: false,
   sendSelectedCategory: '',
-  itemData: {}
+  itemData: {},
+  buttonValue: ""
 }
 
 export const componentSlice = createSlice({
@@ -41,7 +42,11 @@ export const componentSlice = createSlice({
     },
     sendDataToItem: (state, {payload}) => {
       state.itemData = payload; 
+    }, 
+    sendButtonValue: (state, {payload}) => {
+      state.buttonValue = payload; 
     }
+
   }
 })
 
@@ -54,6 +59,7 @@ export const {
   openSearchBar,
   changeCategoryValue,
   sendDataToItem,
+  sendButtonValue
 } = componentSlice.actions
 
 export default componentSlice.reducer

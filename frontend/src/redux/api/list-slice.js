@@ -1,39 +1,40 @@
+
 import { userApi } from './user-slice'
 
-export const productApi = userApi.injectEndpoints({
+export const listApi = userApi.injectEndpoints({
   endpoints: builder => ({
-    getProduct: builder.query({
+    getList: builder.query({
       query: id => {
         return {
-          url: `/product/${id}`
+          url: `/list/${id}`
         }
       },
-      providesTags: ['Product']
+      providesTags: ['List']
     }),
-    createProduct: builder.mutation({
+    createList : builder.mutation({
       query: ({ formData, id }) => {
         return {
-          url: `/product/${id}`,
+          url: `/list/${id}`,
           method: 'POST',
           body: formData
         }
       },
       invalidatesTags: ['Category', 'Product']
     }),
-    updateProduct: builder.mutation({
+    updateList: builder.mutation({
       query: ({ formData, productId }) => {
         return {
-          url: `/product/${productId}`,
+          url: `/list/${productId}`,
           method: 'PUT',
           body: formData
         }
       },
       invalidatesTags: ['Category', 'Product']
     }),
-    deleteProduct : builder.mutation({
+    deleteList : builder.mutation({
       query: ({ categoryId, productId }) => {
         return {
-          url: `/product/${productId}/${categoryId}`,
+          url: `/list/${productId}/${categoryId}`,
           method: 'DELETE',
         }
       },
@@ -42,8 +43,8 @@ export const productApi = userApi.injectEndpoints({
   })
 })
 export const {
-  useCreateProductMutation,
-  useGetProductQuery,
-  useUpdateProductMutation,
-  useDeleteProductMutation,
-} = productApi
+useGetListQuery,
+useDeleteListMutation,
+useCreateListMutation,
+useUpdateListMutation, 
+} = listApi

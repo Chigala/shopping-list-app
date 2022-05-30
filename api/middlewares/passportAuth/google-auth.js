@@ -3,6 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const User = require('../../database/models/user')
 require('dotenv').config()
 const Category = require("../../database/models/category")
+const randomWords = require("random-words")
+const List = require("../../database/models/list")
 
 
 var params = {
@@ -41,6 +43,11 @@ var Strategy = new GoogleStrategy(
             { name: 'household and furniture', belongsTo:user._id },
             { name: 'school stuffs', belongsTo:user._id }
           ]); 
+          const randomListName = randomWords({exactly:1, wordsPerString:2})
+          List.create({
+            name: randomListName[0], 
+            belongsTo:user._id
+          })
           })
 
       }

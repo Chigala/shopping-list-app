@@ -13,29 +13,6 @@ const create_product = async (req, res) => {
     })
   }
   const category = await Category.findOne({ name: req.body.category })
-  // const productId = mongoose.Types.ObjectId(`${req.body.id}`)
-  // const product = await Product.findById(productId)
-
-  //if there is a product id already, update the product else you create a new product
-  // if (product) {
-  //   update_product()
-  //   // await cloudinary.uploader.destroy(product.cloudinaryId)
-  //   // product.name = req.body.name
-  //   // product.description = req.body.description
-  //   // product.photoUrl = result?.secure_url
-  //   // product.categoryName = req.body.category
-  //   // await product.save()
-
-  //   // if (!category.items.includes(product._id)) {
-  //   //   category.items.push(product._id)
-  //   //   await category.save()
-  //   //     const newCategory = await Category.findOneAndUpdate(
-  //   //       { id: product.category },
-  //   //       { $pull: { items: product._id } }
-  //   //     )
-  //   // }
-  //   // res.status(200).json(product)
-  // }
   if (category) {
     const product = await new Product({
       name: req.body.name,
@@ -74,6 +51,7 @@ const create_product = async (req, res) => {
 
 //update the products
 
+//FIXME: check if the whole cloudinary cloud ID is actually deleting 
 const update_product = async (req, res) => {
   const product = await Product.findById(req.params.id)
 
@@ -144,7 +122,28 @@ const update_product = async (req, res) => {
     res.status(200).send(updatedProduct)
   }
 }
+//complete a product
+const complete_product = async(req,res) => {
+  const productId = req.params.id; 
+  const product = await Product.findById(productId)
+  product.completed = !product.completed
+  await product.save()
+  res.status(200).json(product); 
+}
 
+//increment the product quantity
+const increment_productQuantity = async(req, res) => {
+  const productId = req.params.id
+  const product = await Product.findByIdAndUpdate(productId, {$inc: { "quantity": 1 }}, {new: true })
+  res.status(200).json(product); 
+}
+
+//decrement the product quantity
+const decrement_productQuantity = async(req, res) => {
+  const productId = req.params.id; 
+  const product = await Product.findByIdAndUpdate(productId, {$inc: { "quantity": -1 }}, {new: true })
+  res.status(200).json(product); 
+}
 //delete a product
 const delete_product = async (req, res) => {
   const categoryId = req.params.categoryId
@@ -154,7 +153,7 @@ const delete_product = async (req, res) => {
     { $pull: { items: req.params.id } }
   )
   await cloudinary.uploader.destroy(product.cloudinaryId)
-  res.status(202).send(product)
+  res.status(202).json(product)
 }
 
 //finding a product
@@ -167,5 +166,8 @@ module.exports = {
   create_product,
   update_product,
   delete_product,
-  find_product
+  find_product,
+  decrement_productQuantity,
+  increment_productQuantity,
+  complete_product
 }

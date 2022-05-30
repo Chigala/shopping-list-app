@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 export const Item = () => {
   const value = useSelector(state => state.componentSlice.itemData)
   console.log(value)
-  const { handleAddToList, handleBack } = useItemLogic()
+  const { handleAddToList, handleBack, handleDeleteProduct } = useItemLogic()
   return (
     <div>
       <div className='flex flex-col h-screen w-screen  md:max-w-xs pt-4 pr-8 md:pr-8 pl-6 overflow-y-scroll'>
@@ -42,7 +42,7 @@ export const Item = () => {
         </div>
         <div className='mt-8 sticky bottom-0 py-4 bg-white'>
           <div className='flex justify-center space-x-4'>
-            <button className='hover:text-red-500'> Delete</button>
+            <button onClick={handleDeleteProduct} className='hover:text-red-500'> Delete</button>
             <button
               onClick={handleAddToList}
               className='bg-[#F9A109] p-2 rounded-md text-white shadow-md hover:bg-[#f9a109de] '

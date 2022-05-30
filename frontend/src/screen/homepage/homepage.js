@@ -10,7 +10,7 @@ export const Homepage = () => {
   const{handleSendDataToItemPage} = useHomepageLogic()
   const state = useSelector(state => state.componentSlice.isAuth)
   const { data, isFetching, isLoading, error } = useGetCategoryQuery(state._id)
-  console.log(data)
+  // console.log(data)
   return (
     <div className='h-[100vh] flex flex-col py-4 px-4 space-y-4 bg-[#FAFAFE] overflow-auto'>
       <div className='flex justify-center item-center space-x-4'>
@@ -34,7 +34,7 @@ export const Homepage = () => {
         {isLoading ? (
           <CircularProgress />
         ) : (
-          data.map(value => {
+          data?.map(value => {
             return (
               <div  key={value._id} className='space-y-3'>
                 <p className='text-sm font-semibold'> {value.name}</p>

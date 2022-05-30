@@ -8,9 +8,13 @@ const itemSchema = new Schema(
     photoUrl: String,
     cloudinaryId: String,
     quantity: {
-      type: Number
+      type: Number, 
+      default: 1, 
     },
-    completed: false,
+    completed:{
+      type: Boolean, 
+      default: false, 
+    }, 
     belongsTo: { type: mongoose.Types.ObjectId, ref: 'User' },
     category: { type: mongoose.Types.ObjectId, ref: 'Category' },
     categoryName: String,

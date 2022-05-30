@@ -7,7 +7,7 @@ const listController = require("../controller/list-controller")
 router.post("/list/:user/:id",listController.create_list)
 
 //complete list
-router.put("/list/complete/:id", listController.complete_list); 
+router.put("/list/complete/:userId/:id", listController.complete_list); 
 
 //change the name
 router.put("/list/:id", listController.change_listName);
@@ -19,8 +19,11 @@ router.delete("/list/:id", listController.delete_list);
 router.put("/list/remove-product/:id/:product", listController.remove_product); 
 
 //cancel a list
-router.put("/list/cancel/:id", listController.cancel_list); 
+router.put("/list/cancel/:userId/:id", listController.cancel_list); 
 
-//view a full list with all the products inside
+//view the list with the products arranged according to their categories 
 router.get("/list/:id", listController.get_fullList)
+
+//view the list without the products arranged accordingly to their categories 
+router.get("/list-data/:id", listController.get_list)
 module.exports = router; 
