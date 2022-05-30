@@ -16,6 +16,7 @@ export const Cart = () => {
   const [buttonValue, setButtonValue] = useState(0)
   const [checkTheButtonDiv, setCheckTheButtonDiv] = useState('')
   const [addToArray, setAddToArray] = useState([])
+  const [productArray, setProductArray] = useState([])
   const [inputListName, setInputListName] = useState('')
   const [checkAllCheckBoxes, setCheckAllCheckBoxes] = useState(false)
   const [showInputField, setShowInputField] = useState(false)
@@ -28,6 +29,16 @@ export const Cart = () => {
   const checkAll = () => {
     setCheckAllCheckBoxes(prev => !prev)
   }
+  React.useEffect(() => {
+    const transformTheDataFromTheApi = () => {
+      if (isFetching) {
+        console.log('is fetching')
+      } else {
+        setProductArray(data)
+      }
+    }
+    transformTheDataFromTheApi()
+  }, [data])
   const {
     showCounter,
     CounterDiv,
@@ -97,11 +108,12 @@ export const Cart = () => {
                 <CircularProgress />
               </div>
             ) : (
-              Object.keys(data).map((value, i) => {
+              Object.keys(productArray).map((value, i) => {
                 return (
                   <div key={i}>
                     <p className='text-[10px] text-[#828282]'>{value}</p>
-                    {data[value].map(innerElement => {
+                    {productArray[value].map(innerElement => {
+                      // console.log(`this is the productArray: ${productArray}`)
                       return (
                         <div
                           className='flex justify-between items-center'
@@ -109,26 +121,24 @@ export const Cart = () => {
                         >
                           <div className='flex items-center space-x-2'>
                             <input
-                              onChange={e => {
-                                if (e.target.checked) {
-                                  console.log('another value')
-                                  setAddToArray([
-                                    ...addToArray,
-                                    {
-                                      id: innerElement._id,
-                                      name: innerElement.name
-                                    }
-                                  ])
-                                } else {
-                                  setAddToArray(
-                                    addToArray.filter(
-                                      product => product.id !== innerElement._id
-                                    )
-                                  )
+                              onChange={() => {
+                                const index = productArray[value].findIndex(
+                                  index => index._id === innerElement._id
+                                )
+                                const newState = productArray[value].map(
+                                  (prd, i) =>
+                                    i === index
+                                      ? { ...prd, completed: !prd.completed }
+                                      : prd
+                                )
+                                const newProductArray = {
+                                  ...productArray,
+                                  [value]: newState
                                 }
+                                console.log(newProductArray)
+                                setProductArray(newProductArray)
                               }}
                               type='checkbox'
-                              value={addToArray}
                               checked={innerElement.completed}
                               name='avocado'
                               className='accent-[#F9A109] cursor-pointer'
