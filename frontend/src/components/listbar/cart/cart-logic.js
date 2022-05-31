@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 
 export const useShowCounter = buttonValue => {
   const navigate = useNavigate()
-  console.log(`this is the buttonValue ${buttonValue}`)
   const [showCounter, setShowCounter] = useState(false)
   const [value, setValue] = useState(buttonValue)
   useEffect(() => {

@@ -26,8 +26,15 @@ export const Cart = () => {
   const handleInputChange = e => {
     setInputListName(e.target.value)
   }
-  const checkAll = () => {
-    setCheckAllCheckBoxes(prev => !prev)
+  const checkAll = e => {
+    const obj = Object.keys(productArray).reduce((acc, curr) => {
+       acc[curr] = [...productArray[curr].map(item => ({...item, completed: e.target.checked})) ];
+       return acc;
+    }, {});
+
+    console.log(obj);
+    setProductArray(obj)
+    
   }
   React.useEffect(() => {
     const transformTheDataFromTheApi = () => {
@@ -121,14 +128,14 @@ export const Cart = () => {
                         >
                           <div className='flex items-center space-x-2'>
                             <input
-                              onChange={() => {
+                              onChange={e => {
                                 const index = productArray[value].findIndex(
                                   index => index._id === innerElement._id
                                 )
                                 const newState = productArray[value].map(
                                   (prd, i) =>
                                     i === index
-                                      ? { ...prd, completed: !prd.completed }
+                                      ? { ...prd, completed: e.target.checked }
                                       : prd
                                 )
                                 const newProductArray = {
@@ -181,12 +188,14 @@ export const Cart = () => {
       <div className='sticky bottom-0 py-4'>
         <div className='flex justify-center space-x-4'>
           <button className='hover:text-red-500 text-base'>cancel</button>
-          <button
-            onClick={checkAll}
-            className='bg-[#F9A109] p-2 rounded-md text-white text-base shadow-md hover:bg-[#f9a109de] '
-          >
-            complete
-          </button>
+          <div>
+            <label>
+              <input type='checkbox' className='hidden' onChange={checkAll} />
+              <span className='bg-[#F9A109] p-2 rounded-md text-white text-base shadow-md hover:bg-[#f9a109de] '>
+                complete
+              </span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
