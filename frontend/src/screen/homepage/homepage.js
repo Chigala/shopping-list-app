@@ -4,13 +4,13 @@ import AddIcon from '@mui/icons-material/Add'
 import { useGetCategoryQuery } from '../../redux/api/category-slice'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@mui/material'
-import {useHomepageLogic} from "./homepage-logic"
+import { useHomepageLogic } from './homepage-logic'
 
 export const Homepage = () => {
-  const{handleSendDataToItemPage} = useHomepageLogic()
+  const { handleSendDataToItemPage, sendProductToList } = useHomepageLogic()
   const state = useSelector(state => state.componentSlice.isAuth)
   const { data, isFetching, isLoading, error } = useGetCategoryQuery(state._id)
-  // console.log(data)
+
   return (
     <div className='h-[100vh] flex flex-col py-4 px-4 space-y-4 bg-[#FAFAFE] overflow-auto'>
       <div className='flex justify-center item-center space-x-4'>
@@ -36,18 +36,31 @@ export const Homepage = () => {
         ) : (
           data?.map(value => {
             return (
-              <div  key={value._id} className='space-y-3'>
+              <div key={value._id} className='space-y-3'>
                 <p className='text-sm font-semibold'> {value.name}</p>
                 <div className='container mx-auto'>
                   <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-y-6'>
-                    {value.items.length === 0?  ( <p>oops! No item</p> ): value.items.map(product => {
-                      return (
-                        <div key={product._id} onClick={() => handleSendDataToItemPage(product)} className='flex group justify-around py-3 px-4 md:px-4 lg:px-8 w-fit items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white'>
-                          <p>{product.name}</p>
-                          <AddIcon className='text-[#C0C1C4] group-hover:text-white scale-75' />
-                        </div>
-                      )
-                    })}
+                    {value.items.length === 0 ? (
+                      <p>oops! No item</p>
+                    ) : (
+                      value.items.map(product => {
+                        return (
+                          <div key={product._id} className='flex group justify-around py-3 px-4 md:px-4 lg:px-8 w-fit items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white space-x-4'>
+                            <div
+                              key={product._id}
+                              onClick={() => handleSendDataToItemPage(product)}
+                            >
+                              <p>{product.name}</p>
+                            </div>
+                            <div
+                              onClick={() => sendProductToList(product._id)}
+                            >
+                              <AddIcon className='text-[#C0C1C4] group-hover:text-white scale-75' />
+                            </div>
+                          </div>
+                        )
+                      })
+                    )}
                   </div>
                 </div>
               </div>

@@ -6,52 +6,52 @@ import animationData from './assets/list-lottie.json'
 import { useGetListQuery } from '../../../redux/api/list-slice'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@mui/material'
-import { sendButtonValue } from '../../../redux/component-slice'
+import { updateListData, getListId } from '../../../redux/component-slice'
 import { useDispatch } from 'react-redux'
 import SendIcon from '@mui/icons-material/Send'
+import { useGetListNameQuery, useUpdateListNameMutation} from '../../../redux/api/list-slice'
 
 export const Cart = () => {
   const userData = useSelector(state => state.componentSlice.isAuth)
   const { data, isFetching } = useGetListQuery(userData._id)
+  const { data: unpopulatedList, isLoading } = useGetListNameQuery(userData._id)
   const [buttonValue, setButtonValue] = useState(0)
   const [checkTheButtonDiv, setCheckTheButtonDiv] = useState('')
-  const [addToArray, setAddToArray] = useState([])
-  const [productArray, setProductArray] = useState([])
   const [inputListName, setInputListName] = useState('')
-  const [checkAllCheckBoxes, setCheckAllCheckBoxes] = useState(false)
   const [showInputField, setShowInputField] = useState(false)
+  const [updateListName] = useUpdateListNameMutation()
   const handleShowInputField = () => {
     setShowInputField(prev => !prev)
+    const formData = new FormData()
+    formData.append('name',inputListName )
+    const listId = unpopulatedList?._id
+    updateListName({listId,formData})
   }
   const handleInputChange = e => {
     setInputListName(e.target.value)
   }
   const checkAll = e => {
     const obj = Object.keys(productArray).reduce((acc, curr) => {
-       acc[curr] = [...productArray[curr].map(item => ({...item, completed: e.target.checked})) ];
-       return acc;
-    }, {});
+      acc[curr] = [
+        ...productArray[curr].map(item => ({
+          ...item,
+          completed: e.target.checked
+        }))
+      ]
+      return acc
+    }, {})
 
-    console.log(obj);
+    console.log(obj)
     setProductArray(obj)
-    
   }
-  React.useEffect(() => {
-    const transformTheDataFromTheApi = () => {
-      if (isFetching) {
-        console.log('is fetching')
-      } else {
-        setProductArray(data)
-      }
-    }
-    transformTheDataFromTheApi()
-  }, [data])
   const {
     showCounter,
     CounterDiv,
     value: numberValue,
     handleShowCounter,
-    handleScreenChange
+    handleScreenChange,
+    setProductArray,
+    productArray
   } = useShowCounter(buttonValue)
   const groceryAnimation = {
     loop: false,
@@ -62,6 +62,22 @@ export const Cart = () => {
     }
   }
   const dispatch = useDispatch()
+  React.useEffect(() => {
+    const transformTheDataFromTheApi = () => {
+      if (isFetching) {
+        console.log('is fetching')
+      } else {
+        setProductArray(data)
+        
+      }
+    }
+    transformTheDataFromTheApi()
+    dispatch(getListId(unpopulatedList?._id))
+  }, [data])
+  React.useEffect(() => {
+    dispatch(updateListData(productArray))
+
+  }, [productArray])
   return (
     <div className='flex flex-col h-screen w-screen md:w-fit px-4'>
       <div className='flex-1 bg-[#FFF0DE] pt-5 px-6 space-y-3  overflow-y-scroll'>
@@ -88,14 +104,16 @@ export const Cart = () => {
             <div className='flex items-center justify-between'>
               <div>
                 {!showInputField ? (
-                  <p className='text-2xl font-semibold'>shopping list</p>
+                  <p className='text-2xl font-semibold'>
+                    {unpopulatedList?.name}
+                  </p>
                 ) : (
                   <input
                     type='text'
                     className='outline-none text-xl w-fit font-semibold bg-[#FFF0DE]'
                     autoFocus
                     onChange={handleInputChange}
-                    defaultValue={'Shopping List'}
+                    defaultValue={unpopulatedList?.name}
                   />
                 )}
               </div>
@@ -120,7 +138,6 @@ export const Cart = () => {
                   <div key={i}>
                     <p className='text-[10px] text-[#828282]'>{value}</p>
                     {productArray[value].map(innerElement => {
-                      // console.log(`this is the productArray: ${productArray}`)
                       return (
                         <div
                           className='flex justify-between items-center'
@@ -158,21 +175,21 @@ export const Cart = () => {
                           {showCounter ||
                           checkTheButtonDiv !== innerElement._id ? (
                             <button
-                              onDoubleClick={() => {
+                              onClick={() => {
                                 handleShowCounter()
                                 setCheckTheButtonDiv(innerElement._id)
-                                setButtonValue(innerElement.quantity)
-                                dispatch(sendButtonValue(innerElement._id))
+                                setButtonValue(innerElement._id)
                               }}
                               className='rounded-lg border-[2px] text-[10px] border-[#F9A109] text-[#F9A109] items-center px-2 hover:bg-[#f9a109b2] hover:text-white'
                             >
-                              {// checkTheButtonDiv === innerElement._id
-                              //   ? `${innerElement.quantity} pcs`
-                              //   : `${innerElement.quantity} pcs`
+                              {
                               `${innerElement.quantity} pcs`}
                             </button>
                           ) : (
-                            <CounterDiv counterId={innerElement._id} />
+                            <CounterDiv
+                              counterId={innerElement._id}
+                              quantity={innerElement.quantity}
+                            />
                           )}
                         </div>
                       )

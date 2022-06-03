@@ -40,15 +40,16 @@ export const ItemForm = () => {
   const [sortedData, setSortedData] = React.useState('')
 
   const { data } = useGetCategoryQuery(state._id)
+  console.log(`this is the data: ${data}`)
 
   React.useEffect(() => {
     const displaySearchedCategory = () => {
-      console.log(`this is the data: ${data}`)
+      console.log(`this is the : ${data}`)
       
       const mapped = data.map(value=>value.name)
       console.log(mapped); 
       const sortedCategory = data.filter(value =>
-        value.name.toLowerCase().includes(categoryValue.toLowerCase())
+        value.name.toLowerCase().includes(categoryValue?.toLowerCase())
       )
       setSortedData(sortedCategory.splice(0, 5))
     }

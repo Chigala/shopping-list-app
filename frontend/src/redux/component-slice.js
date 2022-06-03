@@ -12,7 +12,8 @@ const initialState = {
   openCategorySearchBar: false,
   sendSelectedCategory: '',
   itemData: {},
-  buttonValue: ""
+  listData: {}, 
+  listId: ""
 }
 
 export const componentSlice = createSlice({
@@ -43,10 +44,12 @@ export const componentSlice = createSlice({
     sendDataToItem: (state, {payload}) => {
       state.itemData = payload; 
     }, 
-    sendButtonValue: (state, {payload}) => {
-      state.buttonValue = payload; 
+    updateListData: (state, {payload}) => {
+      state.listData = payload; 
+    },
+    getListId: (state, {payload}) => {
+      state.listId = payload; 
     }
-
   }
 })
 
@@ -59,7 +62,8 @@ export const {
   openSearchBar,
   changeCategoryValue,
   sendDataToItem,
-  sendButtonValue
+  updateListData,
+  getListId,
 } = componentSlice.actions
 
 export default componentSlice.reducer

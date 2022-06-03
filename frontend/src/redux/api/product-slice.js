@@ -38,7 +38,35 @@ export const productApi = userApi.injectEndpoints({
         }
       },
       invalidatesTags: ['Category', 'Product']
-    })
+    }),
+    completeProduct : builder.mutation({
+      query: (productId) => {
+        return {
+          url: `/product/${productId}`,
+          method: 'PUT',
+        }
+      },
+      invalidatesTags: ['List','Category', 'Product']
+    }),
+    incrementProduct : builder.mutation({
+      query: (productId) => {
+        return {
+          url: `/product/increment/${productId}`,
+          method: 'PUT',
+        }
+      },
+      // invalidatesTags: ['List','Category', 'Product']
+    }),
+    decrementProduct : builder.mutation({
+      query: (productId) => {
+        return {
+          url: `/product/decrement/${productId}`,
+          method: 'PUT',
+        }
+      },
+      // invalidatesTags: ['List','Category', 'Product']
+    }),
+
   })
 })
 export const {
@@ -46,4 +74,7 @@ export const {
   useGetProductQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useCompleteProductMutation,
+  useDecrementProductMutation,
+  useIncrementProductMutation,
 } = productApi

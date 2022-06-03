@@ -11,40 +11,67 @@ export const listApi = userApi.injectEndpoints({
       },
       providesTags: ['List']
     }),
-    createList : builder.mutation({
-      query: ({ formData, id }) => {
+    getListName: builder.query({
+      query: id => {
         return {
-          url: `/list/${id}`,
-          method: 'POST',
-          body: formData
+          url: `/list-data/${id}`
         }
       },
-      invalidatesTags: ['Category', 'Product']
     }),
-    updateList: builder.mutation({
-      query: ({ formData, productId }) => {
+    addProductToList : builder.mutation({
+      query: ({listId,productId}) => {
         return {
-          url: `/list/${productId}`,
+          url: `/list/${listId}/${productId}`,
+          method: 'POST',
+        }
+      },
+      invalidatesTags: ['List']
+    }),
+    updateListName: builder.mutation({
+      query: ({ formData, listId }) => {
+        return {
+          url: `/list/${listId}`,
           method: 'PUT',
           body: formData
         }
       },
-      invalidatesTags: ['Category', 'Product']
+      invalidatesTags: ['List' ]
     }),
-    deleteList : builder.mutation({
-      query: ({ categoryId, productId }) => {
+    cancelTheList : builder.mutation({
+      query: (listId) => {
         return {
-          url: `/list/${productId}/${categoryId}`,
-          method: 'DELETE',
+          url: `/list/cancel/${listId}`,
+          method: 'PUT',
         }
       },
-      invalidatesTags: ['Category', 'Product']
-    })
+      invalidatesTags: ['List']
+    }),
+    completeList : builder.mutation({
+      query: (listId) => {
+        return {
+          url: `/list/complete/${listId}`,
+          method: 'PUT',
+        }
+      },
+      invalidatesTags: ['List']
+    }),
+    deleteProductFromList : builder.mutation({
+      query: ({listId, value}) => {
+        return {
+          url: `/list/remove-product/${listId}/${value}`,
+          method: 'PUT',
+        }
+      },
+      // invalidatesTags: ['List']
+    }),
   })
 })
 export const {
 useGetListQuery,
-useDeleteListMutation,
-useCreateListMutation,
-useUpdateListMutation, 
+useCancelTheListMutation,
+useCompleteListMutation,
+useDeleteProductFromListMutation,
+useUpdateListNameMutation,
+useAddProductToListMutation,
+useGetListNameQuery
 } = listApi

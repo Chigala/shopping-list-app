@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import Tooltip from '@mui/material/Tooltip'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import ReplayIcon from '@mui/icons-material/Replay'
@@ -19,11 +20,33 @@ const hoverVariant = {
 }
 export const Sidebar = () => {
   const { handleLogout } = useSideBarLogic()
+  const listData = useSelector(state => state.componentSlice.listData)
+  console.log(`this is the listData: ${listData}`)
+  const [array, setArray] = React.useState([])
+  const findingMe = Object.keys(array).map(element => element)
+  const badgeCountValue = findingMe
+    .map(element =>
+      array[element].reduce((acc, innerElement) => {
+        let count = 0
+        if (innerElement.completed === false) {
+          count++
+        }
+        return acc + count
+      }, 0)
+    )
+    .reduce((acc, element) => {
+      return acc + element
+    }, 0)
+  React.useEffect(() => {
+    setArray(listData)
+  }, [listData])
+
   const location = useLocation()
-  
+
   const getPathName = path => {
     return location.pathname === path
   }
+
   return (
     <>
       <motion.div className='flex flex-col  justify-between items-center h-screen py-4'>
@@ -84,7 +107,7 @@ export const Sidebar = () => {
             placement='right-start'
             className='pl-2 cursor-pointer'
           >
-            <Badge badgeContent={badgeValue} color='error'>
+            <Badge badgeContent={badgeCountValue} color='error'>
               <Link to='/listbar'>
                 <ShoppingCartIcon className='scale-75' />
               </Link>
