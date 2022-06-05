@@ -80,10 +80,10 @@ export const Sidebar = () => {
             <Tooltip
               placement='right-start'
               title='History'
-              className={`${getPathName('/homepage/history') &&
+              className={`${getPathName('/history') &&
                 ' border-l-4 border-[#F9A109] rounded-sm '} pl-2`}
             >
-              <Link to='/homepage/history'>
+              <Link to='/history'>
                 <ReplayIcon />
               </Link>
             </Tooltip>
@@ -92,10 +92,10 @@ export const Sidebar = () => {
             <Tooltip
               placement='right-start'
               title='statistics'
-              className={`${getPathName('/homepage/dashboard') &&
+              className={`${getPathName('/dashboard') &&
                 ' border-l-4 border-[#F9A109] rounded-sm '} pl-2`}
             >
-              <Link to='/homepage/dashboard'>
+              <Link to='/dashboard'>
                 <AnalyticsIcon className='scale-100' />
               </Link>
             </Tooltip>

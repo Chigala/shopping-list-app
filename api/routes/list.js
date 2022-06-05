@@ -2,15 +2,19 @@ const{Router} = require("express");
 const router = Router(); 
 const List = require("../database/models/list"); 
 const listController = require("../controller/list-controller")
+const upload = require("../services/multer")
 
 //creating a new list
 router.post("/list/:list/:id",listController.create_list)
+
+//get all the list(the ones that are completed and then the ones that were cancelled)
+router.get("/list/get-all/:id",listController.get_AllList)
 
 //complete list
 router.put("/list/complete/:userId/:id", listController.complete_list); 
 
 //change the name
-router.put("/list/:id", listController.change_listName);
+router.put("/list/:id", upload.single("image"), listController.change_listName);
 
 //delete list 
 router.delete("/list/:id", listController.delete_list);

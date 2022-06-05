@@ -20,12 +20,14 @@ export const Cart = () => {
   const [inputListName, setInputListName] = useState('')
   const [showInputField, setShowInputField] = useState(false)
   const [updateListName] = useUpdateListNameMutation()
-  const handleShowInputField = () => {
+  const handleShowInputField = async() => {
     setShowInputField(prev => !prev)
     const formData = new FormData()
     formData.append('name',inputListName )
+    console.log(formData.get('name'))
     const listId = unpopulatedList?._id
-    updateListName({listId,formData})
+    console.log('this is the listId', listId)
+    await updateListName({formData,listId})
   }
   const handleInputChange = e => {
     setInputListName(e.target.value)

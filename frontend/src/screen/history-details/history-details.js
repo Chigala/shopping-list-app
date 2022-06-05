@@ -1,63 +1,46 @@
 import React from 'react'
+import { format } from 'date-fns'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { useHistoryDetailsLogic } from './history-details-logic'
 export const HistoryDetails = () => {
-  const { handleChangeScreen } = useHistoryDetailsLogic()
+  const { handleChangeScreen, filteredData } = useHistoryDetailsLogic()
+  console.log('the filtered data', filteredData.name)
   return (
     <div className='h-screen container py-4 px-6 bg-[#FAFAFE] overflow-auto space-y-4'>
       <div onClick={handleChangeScreen} className='cursor-pointer'>
         <ArrowBackIcon className='text-[#F9A109]' />
       </div>
       <div>
-        <p>Chigala's Birthday party</p>
+        <p>{filteredData.name}</p>
         <div className='flex items-center'>
           <CalendarMonthIcon className='scale-75 text-gray-500' />
-          <p className='text-[9px]'>June 29th 2021</p>
+          <p className='text-[9px]'>
+            {
+              format(new Date(filteredData.updatedAt), 'EEEE, MMMM yyyy')
+            }
+          </p>
         </div>
         <div>
-          <div>
-            <p className='my-2'>cookies</p>
-            <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4'>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
+          {Object.keys(filteredData.data).map(element => {
+            return (
+              <div>
+                <p className='my-2'>{element}</p>
+                <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4'>
+                  {filteredData.data[element].map(innerEle => {
+                    return (
+                      <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
+                        <div className='w-[50%]'>
+                          <p className='break-words'>{innerEle.name}</p>
+                        </div>
+                        <p className='text-[#F9A109]'>{innerEle.quantity} pcs</p>
+                      </div>
+                    )
+                  })}
                 </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
               </div>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
-                </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
-              </div>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
-                </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
-              </div>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
-                </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
-              </div>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
-                </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
-              </div>
-              <div className='px-5 flex container bg-white justify-around py-3 rounded-md hover:shadow-lg cursor-pointer'>
-                <div className='w-[50%]'>
-                  <p className='break-words'>friends online</p>
-                </div>
-                <p className='text-[#F9A109]'>3 pcs</p>
-              </div>
-            </div>
-          </div>
-          <div></div>
+            )
+          })}
         </div>
       </div>
     </div>

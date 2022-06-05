@@ -13,7 +13,8 @@ const initialState = {
   sendSelectedCategory: '',
   itemData: {},
   listData: {}, 
-  listId: ""
+  listId: "", 
+  listHistoryId: "", 
 }
 
 export const componentSlice = createSlice({
@@ -49,7 +50,11 @@ export const componentSlice = createSlice({
     },
     getListId: (state, {payload}) => {
       state.listId = payload; 
-    }
+    }, 
+    getListHistoryId: (state, {payload}) => {
+      state.listHistoryId = payload; 
+    }, 
+    
   }
 })
 
@@ -64,6 +69,7 @@ export const {
   sendDataToItem,
   updateListData,
   getListId,
+  getListHistoryId
 } = componentSlice.actions
 
 export default componentSlice.reducer

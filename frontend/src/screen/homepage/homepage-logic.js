@@ -7,8 +7,7 @@ import { useAddProductToListMutation } from '../../redux/api/list-slice'
 export const useHomepageLogic = () => {
   const dispatch = useDispatch()
   const [sendProduct] = useAddProductToListMutation()
-  const listData = useSelector(state => state.componentSlice.listData)
-  const listId = listData?._id
+  const listId = useSelector(state => state.componentSlice.listId)
 
   const handleSendDataToItemPage = data => {
     dispatch(sendDataToItem(data))

@@ -11,12 +11,20 @@ export const listApi = userApi.injectEndpoints({
       },
       providesTags: ['List']
     }),
+    getHistoryList: builder.query({
+      query: id => {
+        return {
+          url: `/list/get-all/${id}`
+        }
+      },
+    }),
     getListName: builder.query({
       query: id => {
         return {
           url: `/list-data/${id}`
         }
       },
+      providesTags: ['unpopulatedList']
     }),
     addProductToList : builder.mutation({
       query: ({listId,productId}) => {
@@ -35,7 +43,7 @@ export const listApi = userApi.injectEndpoints({
           body: formData
         }
       },
-      invalidatesTags: ['List' ]
+      invalidatesTags: ['unpopulatedList' ]
     }),
     cancelTheList : builder.mutation({
       query: (listId) => {
@@ -73,5 +81,6 @@ useCompleteListMutation,
 useDeleteProductFromListMutation,
 useUpdateListNameMutation,
 useAddProductToListMutation,
-useGetListNameQuery
+useGetListNameQuery,
+useGetHistoryListQuery,
 } = listApi

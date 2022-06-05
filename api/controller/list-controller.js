@@ -56,7 +56,8 @@ const complete_list = async (req, res) => {
 const change_listName = async (req, res) => {
   const listId = req.params.id
   const list = await List.findById(listId)
-  list.name = req.body.name
+  list.name = req.body.name || list.name
+  console.log('this is the name', req.body)
   list.save()
   res.status(200).json(list)
 }
@@ -135,17 +136,44 @@ const displayDailyProductStatistics = async (req, res) => {
   }).populate('data')
   const transformed = []
 
-list.forEach(d => {
+  list.forEach(d => {
     d.data.forEach(item => {
-        const exist = transformed.find(t => t.name == item.name)
-        if(exist) 
-            exist.quantity += item.quantity
-        else 
-            transformed.push(item)
+      const exist = transformed.find(t => t.name == item.name)
+      if (exist) exist.quantity += item.quantity
+      else transformed.push(item)
     })
-})
+  })
 
   res.status(200).json(transformed)
+}
+const get_AllList = async (req, res) => {
+  const userId = req.params.id
+  const list = await List.find({
+    belongsTo: userId,
+    listType: 'completed' || 'cancelled'
+  }).populate('data')
+  const transform = data =>
+    data.map(({ name, belongsTo, updatedAt, listType, id, data }) => {
+      return {
+        name,
+        id,
+        belongsTo,
+        listType,
+        updatedAt,
+        data: data.reduce((res, { id, quantity, name, categoryName }) => {
+          return {
+            ...res,
+            [categoryName]: [
+              ...(res[categoryName] || []),
+              { id, quantity, name, categoryName }
+            ]
+          }
+        }, {})
+      }
+    })
+  const result = transform(list)
+
+  res.status(200).json(result)
 }
 module.exports = {
   create_list,
@@ -156,5 +184,6 @@ module.exports = {
   get_fullList,
   remove_product,
   get_list,
-  displayDailyProductStatistics
+  displayDailyProductStatistics,
+  get_AllList
 }
