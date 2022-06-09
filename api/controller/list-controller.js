@@ -140,12 +140,67 @@ const displayDailyProductStatistics = async (req, res) => {
     d.data.forEach(item => {
       const exist = transformed.find(t => t.name == item.name)
       if (exist) exist.quantity += item.quantity
-      else transformed.push(item)
+      else
+        transformed.push({
+          name: item.name,
+          quantity: item.quantity,
+          updatedAt: item.updatedAt,
+          id: item._id
+        })
     })
   })
 
+  const newValue = transformed.reduce((acc, entry) => {
+    return acc + entry.quantity
+  }, 0)
+    transformed
+    .sort((a, b) => b.quantity - a.quantity)
+    .forEach(entry => (entry.percent = Math.floor((entry.quantity / newValue) * 100)))
+    
+    
+    
+  console.log(transformed)
+
   res.status(200).json(transformed)
 }
+
+//get the frequency of all the categories
+const frequencyOfCategories = async (req, res) => {
+  const userId = req.params.id
+  const list = await List.find({
+    belongsTo: userId,
+    listType: 'completed'
+  }).populate('data')
+  const transformed = []
+
+  list.forEach(d => {
+    d.data.forEach(item => {
+      const exist = transformed.find(t => t.name == item.categoryName)
+      if (exist) exist.number++
+      else
+        transformed.push({
+          name: item.categoryName,
+          number: 1,
+          id: item._id
+        })
+    })
+  })
+  // let valueSum = {};
+  // transformed.map(entry => valueSum[entry.name] = (valueSum[entry.label] || 0 ) + entry.number )
+
+  //getting the total values in the whole thing
+  const newValue = transformed.reduce((acc, entry) => {
+    return acc + entry.number
+  }, 0)
+  transformed
+    .sort((a, b) => b.number - a.number)
+    .map(entry => (entry.percent = (entry.number / newValue) * 100))
+  console.log(transformed)
+
+  res.status(200).json(transformed)
+}
+
+//get all the list
 const get_AllList = async (req, res) => {
   const userId = req.params.id
   const list = await List.find({
@@ -185,5 +240,6 @@ module.exports = {
   remove_product,
   get_list,
   displayDailyProductStatistics,
-  get_AllList
+  get_AllList,
+  frequencyOfCategories
 }

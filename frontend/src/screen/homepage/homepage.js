@@ -39,20 +39,22 @@ export const Homepage = () => {
               <div key={value._id} className='space-y-3'>
                 <p className='text-sm font-semibold'> {value.name}</p>
                 <div className='container mx-auto'>
-                  <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 md:gap-x-2 gap-y-6'>
+                  <div className='grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4  gap-y-6'>
                     {value.items.length === 0 ? (
                       <p>oops! No item</p>
                     ) : (
                       value.items.map(product => {
                         return (
-                          <div key={product._id} className='flex group justify-around py-3 px-4 md:px-4 lg:px-8 w-fit items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white space-x-4'>
+                          <div key={product._id} className='flex group justify-around py-3 px-2 text-xs md:px-4 lg:px-8  items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white '>
                             <div
+                            className=' w-fit'
                               key={product._id}
                               onClick={() => handleSendDataToItemPage(product)}
                             >
                               <p>{product.name}</p>
                             </div>
                             <div
+                            className=''
                               onClick={() => sendProductToList(product._id)}
                             >
                               <AddIcon className='text-[#C0C1C4] group-hover:text-white scale-75' />

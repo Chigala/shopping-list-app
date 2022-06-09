@@ -9,7 +9,11 @@ import { CircularProgress } from '@mui/material'
 import { updateListData, getListId } from '../../../redux/component-slice'
 import { useDispatch } from 'react-redux'
 import SendIcon from '@mui/icons-material/Send'
-import { useGetListNameQuery, useUpdateListNameMutation} from '../../../redux/api/list-slice'
+import {
+  useGetListNameQuery,
+  useUpdateListNameMutation
+} from '../../../redux/api/list-slice'
+import { TailwindModal } from '../../tailwindModal'
 
 export const Cart = () => {
   const userData = useSelector(state => state.componentSlice.isAuth)
@@ -17,17 +21,32 @@ export const Cart = () => {
   const { data: unpopulatedList, isLoading } = useGetListNameQuery(userData._id)
   const [buttonValue, setButtonValue] = useState(0)
   const [checkTheButtonDiv, setCheckTheButtonDiv] = useState('')
+  const [openDialog, setOpenDialog] = useState(false)
   const [inputListName, setInputListName] = useState('')
   const [showInputField, setShowInputField] = useState(false)
+  const [complete, setComplete] = useState(false)
   const [updateListName] = useUpdateListNameMutation()
-  const handleShowInputField = async() => {
+  const handleDialogOpen = () => {
+    setOpenDialog(true)
+  }
+
+  const handleDialogClose = () => {
+    setOpenDialog(false)
+  }
+  const handleCancelDialog = () => {
+    console.log('cancelled the whole list ')
+  }
+  const handleSubmitDialog = () => {
+    console.log('submitted the whole button ')
+  }
+  const handleShowInputField = async () => {
     setShowInputField(prev => !prev)
     const formData = new FormData()
-    formData.append('name',inputListName )
+    formData.append('name', inputListName)
     console.log(formData.get('name'))
     const listId = unpopulatedList?._id
     console.log('this is the listId', listId)
-    await updateListName({formData,listId})
+    await updateListName({ formData, listId })
   }
   const handleInputChange = e => {
     setInputListName(e.target.value)
@@ -70,7 +89,6 @@ export const Cart = () => {
         console.log('is fetching')
       } else {
         setProductArray(data)
-        
       }
     }
     transformTheDataFromTheApi()
@@ -78,7 +96,6 @@ export const Cart = () => {
   }, [data])
   React.useEffect(() => {
     dispatch(updateListData(productArray))
-
   }, [productArray])
   return (
     <div className='flex flex-col h-screen w-screen md:w-fit px-4'>
@@ -184,8 +201,7 @@ export const Cart = () => {
                               }}
                               className='rounded-lg border-[2px] text-[10px] border-[#F9A109] text-[#F9A109] items-center px-2 hover:bg-[#f9a109b2] hover:text-white'
                             >
-                              {
-                              `${innerElement.quantity} pcs`}
+                              {`${innerElement.quantity} pcs`}
                             </button>
                           ) : (
                             <CounterDiv
@@ -204,11 +220,30 @@ export const Cart = () => {
         </div>
       </div>
 
+      <TailwindModal
+        open={openDialog}
+        handleClickOpen={handleDialogOpen}
+        handleSubmit={complete? handleSubmitDialog : handleCancelDialog}
+        handleClose={handleDialogClose}
+      />
       <div className='sticky bottom-0 py-4'>
         <div className='flex justify-center space-x-4'>
-          <button className='hover:text-red-500 text-base'>cancel</button>
+          <button
+            className='hover:text-red-500 text-base'
+            onClick={() => {
+              setComplete(false); 
+              handleDialogOpen()
+            }}
+          >
+            cancel
+          </button>
           <div>
-            <label>
+            <label
+              onClick={() => {
+                setComplete(true)
+                handleDialogOpen()
+              }}
+            >
               <input type='checkbox' className='hidden' onChange={checkAll} />
               <span className='bg-[#F9A109] p-2 rounded-md text-white text-base shadow-md hover:bg-[#f9a109de] '>
                 complete

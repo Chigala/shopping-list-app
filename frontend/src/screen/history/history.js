@@ -33,7 +33,7 @@ export const History = () => {
                   <p className='whitespace-nowrap text-[6px] sm:text-xs'>
                     {format(new Date(element.updatedAt), 'EEEE, MMMM yyyy')}
                   </p>
-                  <button className={ `${element.listType === "completed" ? "border-green-500 text-green-500":"border-red-500"} rounded-md px-1 ml-2 border-[2px] text-[8px] font-semibold border-[#56CCF2] ` }>
+                  <button className={ `${element.listType === "completed" ? "border-green-500 text-green-500":"border-red-500"} rounded-md px-1 ml-2 border-[2px] text-[8px] font-semibold ] ` }>
                     completed
                   </button>
                   <ChevronRightIcon className='text-[#F9A109] scale:50' />

@@ -18,6 +18,20 @@ export const listApi = userApi.injectEndpoints({
         }
       },
     }),
+    getCategoryFrequency: builder.mutation({
+      query: id => {
+        return {
+          url: `/list-category-statistics-data/${id}`
+        }
+      },
+    }),
+    getProductFrequency: builder.mutation({
+      query: id => {
+        return {
+          url: `/list-statistics-data/${id}`
+        }
+      },
+    }),
     getListName: builder.query({
       query: id => {
         return {
@@ -83,4 +97,6 @@ useUpdateListNameMutation,
 useAddProductToListMutation,
 useGetListNameQuery,
 useGetHistoryListQuery,
+useGetCategoryFrequencyMutation,
+useGetProductFrequencyMutation
 } = listApi

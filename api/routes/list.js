@@ -33,4 +33,7 @@ router.get("/list-data/:id", listController.get_list)
 
 //view the data exactly how you can use it in chart js to do the statistics
 router.get("/list-statistics-data/:id", listController.displayDailyProductStatistics)
+
+//view the data exactly how you can use it in chart js to do the statistics
+router.get("/list-category-statistics-data/:id", listController.frequencyOfCategories)
 module.exports = router; 
