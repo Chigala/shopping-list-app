@@ -104,7 +104,7 @@ const check_password = async(req, res, next) => {
   const { email } = req.body
   const user = await User.findOne({ email: email })
   if (user?.googleid) {
-    opn('http://localhost:5000/api/google/login')
+    opn('https://lister-app.herokuapp.com/api/google/login')
     res.status(200).json({ msg: 'Logging in to google', color: 'success' })
   } else {
     res.status(200).json({ msg: 'No Gmail present', color: 'warning' })
@@ -137,7 +137,7 @@ const forgot_password = async (req, res) => {
       id: userId
     }
     const token = Jwt.sign(payload, secret, { expiresIn: '15m' })
-    const link = `http://localhost:5000/api/forgot-password/${userId}/${token}`
+    const link = `https://lister-app.herokuapp.com/api/forgot-password/${userId}/${token}`
     sendEmail(link, email)
     console.log('the new function has been called')
     res.status(200).json({ msg: token, userid: userId })
@@ -157,10 +157,10 @@ const email_token_validator = async (req, res) => {
     const secret = user.password + process.env.JWT_SECRET
     Jwt.verify(token, secret)
     // res.status(200).json('the user has a valid token')
-    res.redirect(`http://localhost:3000/change-password/${id}`)
+    res.redirect(`https://listershopper.netlify.app/change-password/${id}`)
   } catch (err) {
     console.log(err)
-    res.status(200).redirect('http://localhost:3000/login')
+    res.status(200).redirect('https://listershopper.netlify.app/login')
   }
 }
 

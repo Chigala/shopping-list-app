@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const userApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://lister-app.herokuapp.com/api' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://lister-app.herokuapp.com/api' }),
   tagTypes: ['Product', 'List', 'category'],
   endpoints: builder => ({
     getProfile: builder.mutation({

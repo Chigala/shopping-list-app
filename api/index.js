@@ -31,7 +31,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 // app.use(multer().array())
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://listershopper.netlify.app",
   credentials: true
 }))
 //cookie parser

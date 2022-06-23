@@ -24,7 +24,7 @@ const sendEmail = async (link,email) => {
       });
     
       let mailOptions = {
-        from: "JAPANESE INVESTORS",
+        from: "Investor Gala",
         to:`${email}`,  
         subject: 'TESTING TESTING TESTING!!!',
         html: `<p>This is the link I always wanted to send to you and here is it <a href=${link}>click on this to change your password</a> </p>`
