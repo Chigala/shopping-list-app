@@ -2,7 +2,7 @@ import React from 'react'
 import { CircularProgress, LinearProgress } from '@mui/material'
 import { useDashboardLogic } from './dashboard-logic'
 import { Line } from 'react-chartjs-2'
-import { Chart as ChartJS } from 'chart.js/auto'
+// import { Chart as ChartJS } from 'chart.js/auto'
 
 export const Dashboard = () => {
   const { product, category } = useDashboardLogic()
