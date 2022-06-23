@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Tooltip from '@mui/material/Tooltip'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
@@ -12,7 +12,6 @@ import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSideBarLogic } from './sidebar-logic'
 
-const badgeValue = 5
 const hoverVariant = {
   hover: {
     scale: 1.2
@@ -20,8 +19,13 @@ const hoverVariant = {
 }
 export const Sidebar = () => {
   const { handleLogout } = useSideBarLogic()
+  const navigate = useNavigate()
+  const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const listData = useSelector(state => state.componentSlice.listData)
   console.log(`this is the listData: ${listData}`)
+  const navigateToCart = () => {
+    isWeb && navigate('/listbar')
+  }
   const [array, setArray] = React.useState([])
   const findingMe = Object.keys(array).map(element => element)
   const badgeCountValue = findingMe
@@ -101,7 +105,11 @@ export const Sidebar = () => {
             </Tooltip>
           </motion.div>
         </div>
-        <motion.div variants={hoverVariant} whileHover='hover'>
+        <motion.div
+          onClick={navigateToCart}
+          variants={hoverVariant}
+          whileHover='hover'
+        >
           <Tooltip
             title='List'
             placement='right-start'

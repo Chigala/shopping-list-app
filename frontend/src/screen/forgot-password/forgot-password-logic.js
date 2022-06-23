@@ -12,9 +12,11 @@ export const useForgotPasswordLogic = () => {
 
   const handleCreate = data => {
     handleEmail(data)
+    console.log(data)
   }
   const handleEmail = async data => {
     const response = await sendEmail(data)
+    console.log(data)
     if(isSuccess){
       
     displaySuccessMsg()

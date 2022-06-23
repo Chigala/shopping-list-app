@@ -9,6 +9,7 @@ import { useHomepageLogic } from './homepage-logic'
 export const Homepage = () => {
   const { handleSendDataToItemPage, sendProductToList } = useHomepageLogic()
   const state = useSelector(state => state.componentSlice.isAuth)
+  console.log("this is the homepage data:", state._id)
   const { data, isFetching, isLoading, error } = useGetCategoryQuery(state._id)
 
   return (

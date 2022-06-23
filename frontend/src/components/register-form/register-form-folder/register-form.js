@@ -18,6 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useDispatch } from 'react-redux'
 import { updateSnackbar } from '../../../redux/snackbar'
 import { useNavigate } from 'react-router'
+import { useForgotPasswordLogic } from '../../../screen/forgot-password/forgot-password-logic'
 
 export const RegisterForm = ({ loginText, registerText, isRegister }) => {
   const isWeb = !window.matchMedia('(max-width: 767px)').matches
@@ -31,8 +32,8 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     handleSignInwithGoogle
   } = useRegisterFormLogic()
 
-  const { handleRegister } = useHandleRegister()
-  const { handleLogin, isLoading } = useHandleLogin()
+  const { handleRegister, isLoading:handleRegisterLoading } = useHandleRegister()
+  const { handleLogin, isLoading, loginBlur,checkEmailLoading } = useHandleLogin()
   const {
     register,
     handleSubmit,
@@ -82,6 +83,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
               <div className='space-y-8'>
                 <InputField
                   register={register}
+                  loginBlur = { loginBlur }
                   errors={errors.email}
                   inputType='text'
                   labelName='Email'
@@ -135,7 +137,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                         placeholder='Enter your Password'
                         register={register}
                         errors={errors.confirmPassword}
-                        name='password'
+                        name='confirmPassword'
                         visible={confirmVisible}
                         registerName='confirmPassword'
                       />
@@ -148,7 +150,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                 </div>
 
                 <div className=''>
-                  <LoginButton isLoading={isLoading} />
+                  <LoginButton isRegister={isRegister} isLoading={isRegister?handleRegisterLoading : isLoading ||checkEmailLoading } />
                   {!isRegister && (
                     <GoogleLoginButton
                       isRegister={false}
@@ -173,6 +175,7 @@ export const InputField = ({
   placeholder,
   inputType,
   registerName,
+  loginBlur, 
   icon
 }) => {
   return (
@@ -183,7 +186,9 @@ export const InputField = ({
           <input
             autoComplete={name}
             type={inputType}
-            {...register(`${registerName}`)}
+            {...register(`${registerName}`, {
+              onBlur: loginBlur 
+            })}
             name={name}
             placeholder={placeholder}
             className='outline-none border-b-2 border-black px-6 w-[95%]  md:w-4/5 focus:border-[#FFC901]'
@@ -229,9 +234,10 @@ export const PasswordFooter = ({
   show,
   visible,
   isWeb,
-  handleChangeVisible
+  handleChangeVisible,
 }) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   return (
     <div>
       {show && (
@@ -248,25 +254,8 @@ export const PasswordFooter = ({
           </div>
           <p
             className='cursor-pointer'
-            onClick={() => {
-              console.log('the forgot button is working ')
-              dispatch(
-                isWeb
-                  ? updateSnackbar({
-                      snackbarOpen: true,
-                      snackbarType: 'success',
-                      snackbarText: 'Forgot password was successful',
-                      snackbarVertical: 'top',
-                      snackbarHorizontal: 'center'
-                    })
-                  : updateSnackbar({
-                      snackbarOpen: true,
-                      snackbarType: 'success',
-                      snackbarText: 'Forgot password was successful',
-                      snackbarVertical: 'top',
-                      snackbarHorizontal: 'center'
-                    })
-              )
+            onClick={()=> {
+              navigate("/forgot-password")
             }}
           >
             forgot password?
@@ -314,6 +303,7 @@ export const LoginButton = ({
   return (
     <button
       type='submit'
+      disabled={isLoading}
       className='w-[95%]  md:w-4/5 text-center bg-[#FFC901] h-8 rounded-lg text-white '
     >
       {isLoading ? (

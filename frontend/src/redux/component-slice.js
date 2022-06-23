@@ -7,6 +7,7 @@ const initialState = {
   screen: 'house',
   registerData: '',
   loginData: '',
+  isLoggedIn: false,   
   isAuth: getDataFromLocalStorage(),
   passwordParams: '',
   openCategorySearchBar: false,
@@ -29,6 +30,9 @@ export const componentSlice = createSlice({
     },
     loginFormData: (state, { payload }) => {
       state.loginData = payload
+    },
+    updateIsloggedIn: (state, { payload }) => {
+      state.isLoggedIn = payload
     },
     updateAuth: (state, action) => {
       state.isAuth = action.payload
@@ -69,7 +73,8 @@ export const {
   sendDataToItem,
   updateListData,
   getListId,
-  getListHistoryId
+  getListHistoryId, 
+  updateIsloggedIn
 } = componentSlice.actions
 
 export default componentSlice.reducer

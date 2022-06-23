@@ -16,14 +16,14 @@ const create_list = async (req, res) => {
         { $inc: { quantity: 1 } },
         { new: true }
       )
-      res.status(200).json('product quantity updated')
+      res.status(200).json({ msg:'product quantity updated', color: 'success'})
     } else {
       userList.data.push(productId)
       userList.save()
-      res.status(200).json('new product added to the list ')
+      res.status(200).json({ msg: 'new product added to the list ', color: 'success' })
     }
   } else {
-    res.status(200).json('there is no active list here ')
+    res.status(200).json({ msg:'there is no active list here ', color: 'success'})
   }
   //  else {
   //     const { name } = req.body

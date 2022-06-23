@@ -13,7 +13,7 @@ TODO:
 export const ItemForm = () => {
   const [categoryValue, setCategoryValue] = React.useState('')
   const [show, setShow] = React.useState(false)
-  const { handleSubmitItemForm } = useItemLogic(categoryValue)
+  const { handleSubmitItemForm, handleBack } = useItemLogic(categoryValue)
   const value = useSelector(state => state.componentSlice.itemData)
 
   const { register, setValue, handleSubmit } = useForm({
@@ -135,7 +135,7 @@ export const ItemForm = () => {
         </div>
         <div className='sticky bottom-0  bg-white py-4'>
           <div className='flex justify-center space-x-4'>
-            <button className='hover:text-red-500 text-base'>cancel</button>
+            <button onClick={handleBack} className='hover:text-red-500 text-base'>Cancel</button>
             <button
               type='submit'
               className='bg-[#F9A109] p-2 rounded-md text-white text-base shadow-md hover:bg-[#f9a109de] '

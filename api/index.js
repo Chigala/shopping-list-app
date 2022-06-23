@@ -12,8 +12,6 @@ const cookie = require("cookie-parser");
 const cookieSession = require("cookie-session");
 require("dotenv").config(); 
 const sessionKey = process.env.SESSION_KEY; 
-///the mongoDB config file 
-require("../api/database/config"); 
 
 ///the user route config file
 const userRoute = require(".//routes/user"); 
@@ -72,6 +70,7 @@ app.use("/api", productRoute);
 
 
 //server connection
-app.listen(5000,()=> {
-    console.log("this port is currently running")
+const port = process.env.PORT || 5000;
+app.listen(port,()=> {
+    console.log(`this port is currently running on port ${port} `)
 })

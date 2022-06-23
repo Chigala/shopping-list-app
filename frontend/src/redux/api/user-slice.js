@@ -3,16 +3,14 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const userApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
-  tagTypes: ["Product","List","category"],
+  tagTypes: ['Product', 'List', 'category'],
   endpoints: builder => ({
-    getProfile: builder.query({
-      query: () =>{
-        return { url: `/profile`, credentials: "include" };
-      }
+    getProfile: builder.mutation({
+      query: () => ({ url: `/profile`, credentials: 'include', method: "GET" })
     }),
     logoutUser: builder.query({
-      query: () =>{
-        return { url: `/logout`, credentials: "include" };
+      query: () => {
+        return { url: `/logout`, credentials: 'include' }
       }
     }),
     registerUser: builder.mutation({
@@ -27,46 +25,57 @@ export const userApi = createApi({
         url: '/login',
         method: 'POST',
         body: user,
-        credentials: "include"
+        credentials: 'include'
+      })
+    }),
+    checkGoogleEmail: builder.mutation({
+      query: user => ({
+        url: '/check-password',
+        method: 'POST',
+        body: user,
+        credentials: 'include'
       })
     }),
     changePassword: builder.mutation({
       query: data => ({
         url: '/change-password',
         method: 'POST',
-        body: data,
-        
+        body: data
       })
     }),
     forgotPassword: builder.mutation({
       query: data => ({
         url: '/forgot-password',
         method: 'POST',
-        body: data,
-        
+        body: data
       })
     }),
-    googleLogin: builder.query({
-      query: () =>{
-        return { url: `/get-google-profile`, credentials: "include" };
-      }
+    googleLogin: builder.mutation({
+      query: () => ({
+        url: `/get-google-profile`,
+        method: 'GET',
+        credentials: 'include'
+      })
     }),
 
-    googleLogout: builder.query({
-      query: () =>{
-        return { url: `/google/logout`, credentials: "include" };
-      }
-    }),
+    googleLogout: builder.mutation({
+      query: () => ({
+        url: `/google/logout`,
+        method: 'GET',
+        credentials: 'include'
+      })
+    })
   })
 })
 
 export const {
-  useGetProfileQuery,
+  useGetProfileMutation,
   useLoginUserMutation,
   useRegisterUserMutation,
   useLogoutUserQuery,
   useChangePasswordMutation,
   useForgotPasswordMutation,
-  useGoogleLoginQuery,
-  useGoogleLogoutQuery
+  useGoogleLoginMutation,
+  useGoogleLogoutMutation,
+  useCheckGoogleEmailMutation
 } = userApi

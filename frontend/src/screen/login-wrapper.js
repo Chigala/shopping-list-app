@@ -1,17 +1,16 @@
 import React from 'react'
-import { Outlet,Navigate } from 'react-router'
+import { Outlet, Navigate, useLocation } from 'react-router'
 import { useSelector } from 'react-redux'
 
 export const LoginWrapper = () => {
-  const user = useSelector(state => state.componentSlice.isAuth)
-  
-  console.log(`this is the logout user:  ${user}`)
-  return (
-    
-   !user? 
+  const user = useSelector(state => state.componentSlice.isLoggedIn)
+  console.log("this is the login wrapper user", user)
+  const location = useLocation()
+  return !user ? (
     <>
-    <Outlet/>
-    </>: 
-    <Navigate to="/homepage"/>
+      <Outlet />
+    </>
+  ) : (
+    <Navigate state={{ from: location }} replace to={'/homepage' }  />
   )
 }

@@ -16,57 +16,57 @@ import { ForgotPassword } from './screen/forgot-password/forgot-password'
 import { PositionedSnackbar } from './components/snackbar'
 import HomePageWrapper from './screen/homepage-wrapper'
 import { LoginWrapper } from './screen/login-wrapper'
-import { useGoogleLoginQuery } from './redux/api/user-slice'
+import { useGoogleLoginMutation } from './redux/api/user-slice'
+import { updateIsloggedIn } from './redux/component-slice'
+import { CartWrapper } from './screen/cartWrapper'
 
 function App () {
   const dispatch = useDispatch()
-  const {data, isSuccess } = useGoogleLoginQuery()
-  // const dispatch = useDispatch()
-  // const [user, setuser] = useState(true)
-  // console.log(`this is the app.js user: ${user}`)
+  const [googleLogin] = useGoogleLoginMutation()
+  const loggedInUser = localStorage.getItem('auth')
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
+
+  //check if there is a req.user and then you authenticate the user
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('auth')
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser)
       dispatch(updateAuth(foundUser))
     }
-  }, [])
-
+  }, [loggedInUser])
   useEffect(() => {
-    const handleAuthGoogleLogin = () => {
-      if (isSuccess) {
-        console.log(`this is the data: ${data}`)
-        dispatch(updateAuth(data.user))
-        localStorage.setItem('auth', JSON.stringify(data.user))
-      }else{
-        console.log("there was an error")
-      }
+    const handleAuthGoogleLogin = async () => {
+      const response = await googleLogin()
+      const data = response.data
+      dispatch(updateAuth(data.user))
+      dispatch(updateIsloggedIn(data.isLoggedIn))
+      localStorage.setItem('auth', JSON.stringify(data.user))
+      localStorage.setItem('isLoggedIn', data.isLoggedIn)
     }
     handleAuthGoogleLogin()
-  }, [isSuccess, data])
+  }, [])
 
   return (
     <>
       <Router>
         <PositionedSnackbar />
         <Routes>
-          <Route path='/' element={<LoginWrapper  />}>
-            <Route index element={<Login />} />
+          <Route path='/' element={<LoginWrapper />}>
+            <Route path='/login' element={<Login />} />
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
           </Route>
-          <Route element={<HomePageWrapper  />}>
-            <Route path='homepage' element={<Homepage />} />
+          <Route element={<HomePageWrapper />}>
+            <Route path='/homepage' element={<Homepage />} />
             <Route path='history' element={<History />} />
             <Route path='dashboard' element={<Dashboard />} />
-            <Route path='itemform' element={<ItemForm />} />
             <Route path='item' element={<Item />} />
-            {window.matchMedia('(max-width: 767px)').matches && (
-              <Route path='listBar' element={<Cart />} />
-            )}
             <Route path='history-details' element={<HistoryDetails />} />
           </Route>
+          <Route element={<CartWrapper />} />
+            <Route path='/listbar' element={<Cart />} />
+            <Route path='itemform' element={<ItemForm />} />
+          <Route />
         </Routes>
       </Router>
     </>

@@ -15,6 +15,7 @@ router.get('/logout', authController.logout)
 router.post('/forgot-password', authController.forgot_password)
 router.get('/forgot-password/:id/:token', authController.email_token_validator)
 router.post('/change-password', authController.change_password)
+router.post('/check-password', authController.check_password)
 
 router.get(
   '/google/login',
@@ -28,9 +29,9 @@ router.get(
     failureRedirect: 'http://localhost:3000/login',
     successRedirect: 'http://localhost:3000/homepage'
   }),
-  (req, res) => {
-    res.redirect("http://localhost:3000/homepage")
-  }
+  // (req, res) => {
+  //   res.redirect("http://localhost:3000/homepage")
+  // }
 )
 router.get('/google/logout', (req, res) => {
   req.logout(); 

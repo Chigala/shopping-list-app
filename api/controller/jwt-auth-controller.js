@@ -6,13 +6,18 @@ const sendEmail = require('../services/nodemailer')
 const Jwt = require('jsonwebtoken')
 const Category = require('../database/models/category')
 const randomWords = require('random-words')
+const List = require('../database/models/list')
+const opn = require('better-opn')
 
 //register the user using passport-local-mongoose plugin
 const register_user = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email })
     if (user) {
-      res.status(200).json('the user is already registered')
+      res.status(200).json({
+        msg: 'This user has already been successfully registered',
+        color: 'warning'
+      })
       return
     }
     User.register(
@@ -21,6 +26,8 @@ const register_user = async (req, res) => {
       function (err, msg) {
         if (err) {
           res.status(500).json(err)
+
+          return
         } else {
           Category.create([
             { name: 'food and vegetables', belongsTo: msg._id },
@@ -28,13 +35,13 @@ const register_user = async (req, res) => {
             { name: 'school stuffs', belongsTo: msg._id }
           ])
           const randomListName = randomWords({ exactly: 1, wordsPerString: 2 })
-           List.create({
+          List.create({
             name: randomListName[0],
-            belongsTo: user._id
+            belongsTo: msg._id
           })
           res
             .status(200)
-            .json({ msg: 'you have successfully registered', user: msg })
+            .json({ msg: 'you have successfully registered', color: 'success' })
         }
       }
     )
@@ -48,9 +55,10 @@ const login_user = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email })
     if (!user) {
-      return res
-        .status(200)
-        .json({ message: "this user doesn't exist in our database" })
+      return res.status(200).json({
+        msg: "The user doesn't exist in our database ",
+        color: 'warning'
+      })
     } else {
       user.authenticate(req.body.password, function (
         err,
@@ -58,7 +66,9 @@ const login_user = async (req, res) => {
         PasswordError
       ) {
         if (PasswordError) {
-          res.status(500).json('the passsword you entered is incorrect')
+          res
+            .status(200)
+            .json({ msg: 'Email and Password incorrect', color: 'warning' })
         }
         if (model) {
           const payload = {
@@ -67,7 +77,11 @@ const login_user = async (req, res) => {
           }
           const token = jwt.encode(payload, jwtSecret)
           res.cookie('cookieToken', token, { httpOnly: true })
-          res.status(200).json({ msg: 'log in complete' })
+          res.status(200).json({
+            msg: 'logged in successful ',
+            color: 'success',
+            loggedIn: true
+          })
         }
       })
     }
@@ -80,11 +94,22 @@ const login_user = async (req, res) => {
 const get_profile = (req, res, next) => {
   res.json({
     message: 'you made it to the secure route',
-    user: true,
+    user: req.user,
+    isLoggedIn: true,
     token: req.query.jwttoken
   })
 }
-
+//check if the gmail password already exists
+const check_password = async(req, res, next) => {
+  const { email } = req.body
+  const user = await User.findOne({ email: email })
+  if (user?.googleid) {
+    opn('http://localhost:5000/api/google/login')
+    res.status(200).json({ msg: 'Logging in to google', color: 'success' })
+  } else {
+    res.status(200).json({ msg: 'No Gmail present', color: 'warning' })
+  }
+}
 //logout the user
 const logout = (req, res) => {
   if (req.cookies['cookieToken']) {
@@ -147,7 +172,7 @@ const change_password = async (req, res) => {
     if (user) {
       user.setPassword(password, function () {
         user.save()
-        res.status(200).json({ msg: 'the password has been changed' })
+        res.status(200).json({ msg: 'Password has been changed ' })
       })
     } else {
       console.log("this user doesn't exist")
@@ -165,5 +190,6 @@ module.exports = {
   email_token_validator,
   change_password,
   get_profile,
-  logout
+  logout,
+  check_password
 }

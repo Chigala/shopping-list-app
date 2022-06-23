@@ -27,8 +27,8 @@ export const LoginSchema = yup.object().shape({
     .string()
     .required('Password is required')
     .matches(
-      '^(?=.*[a-z])(?=.*[!@#$%^&*])(?=.{8,})',
-      'Needs to contain at least 8characters and contain at least one special character '
+      '^(?=.*[a-z])(?=.*[!@#$%^&=*])(?=.{8,})',
+      'password(8) contain at least one special character '
     )
 })
 export const changePasswordSchema = yup.object().shape({

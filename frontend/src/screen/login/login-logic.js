@@ -1,26 +1,55 @@
 import { useLoginUserMutation } from '../../redux/api/user-slice'
-import { useGetProfileQuery } from '../../redux/api/user-slice'
+import { useGetProfileMutation,useCheckGoogleEmailMutation } from '../../redux/api/user-slice'
 import { useDispatch } from 'react-redux'
-import { updateAuth } from '../../redux/component-slice'
+import { updateIsloggedIn, updateAuth } from '../../redux/component-slice'
+import { updateSnackbar } from '../../redux/snackbar'
 
 export const useHandleLogin = () => {
-  const [loginUser,{isLoading}] = useLoginUserMutation()
-  const { data: userData } = useGetProfileQuery()
+  const [loginUser, { isLoading }] = useLoginUserMutation()
+  const [checkGoogleEmail, {isLoading:checkEmailLoading}] = useCheckGoogleEmailMutation(); 
+  const [getProfile] = useGetProfileMutation()
+  const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const dispatch = useDispatch()
+  const loginBlur = async data => {
+    // console.log('this is the data after the login blur: ', data.target.value)
+    const value = {email: data.target.value}; 
+    console.log(value); 
+   await checkGoogleEmail(value);  
+  }
+
   const handleLogin = async data => {
     try {
       console.log('the button was pressed')
-      // console.log(data); 
       const result = await loginUser(data)
+      const value = result.data
+      dispatch(
+        isWeb
+          ? updateSnackbar({
+              snackbarOpen: true,
+              snackbarType: value.color,
+              snackbarText: value.msg,
+              snackbarVertical: 'top',
+              snackbarHorizontal: 'center'
+            })
+          : updateSnackbar({
+              snackbarOpen: true,
+              snackbarType: value.color,
+              snackbarText: value.msg,
+              snackbarVertical: 'top',
+              snackbarHorizontal: 'center'
+            })
+      )
 
-      if (result.data) {
-        //call the handle Click function to show the logging in snackbar
-        // handleClick()
-        const changeState = () => {
-          dispatch(updateAuth(userData.user))
-          localStorage.setItem('auth', userData.user)
+      if (result.data.loggedIn) {
+        const changeState = async () => {
+          const userData = await getProfile()
+          const data = userData.data
+          dispatch(updateAuth(data.user))
+          dispatch(updateIsloggedIn(data.isLoggedIn))
+          localStorage.setItem('auth', JSON.stringify(data.user))
+          localStorage.setItem('isLoggedIn', data.isLoggedIn)
         }
-        setTimeout(changeState,0)
+        changeState()
       }
     } catch (err) {
       console.log(err)
@@ -29,7 +58,8 @@ export const useHandleLogin = () => {
 
   return {
     handleLogin,
-    isLoading 
-    
+    isLoading,
+    loginBlur, 
+    checkEmailLoading
   }
 }
