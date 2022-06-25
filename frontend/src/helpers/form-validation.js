@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 export const RegisterSchema = yup.object().shape({
-  username: yup.string().required(),
+  username: yup.string().required().matches('^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$', "Username(4-20) characters"),
   email: yup
     .string()
     .email()

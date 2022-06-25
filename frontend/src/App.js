@@ -51,7 +51,7 @@ function App () {
         <PositionedSnackbar />
         <Routes>
           <Route path='/' element={<LoginWrapper />}>
-            <Route path='/login' element={<Login />} />
+            <Route index element={<Login />} />
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />

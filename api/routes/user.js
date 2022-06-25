@@ -26,8 +26,8 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'http://listershopper.netlify.app/login',
-    successRedirect: 'http://listershopper.netlify.app/homepage'
+    failureRedirect: 'https://listershopper.netlify.app/',
+    successRedirect: 'https://listershopper.netlify.app/homepage'
   }),
 )
 router.get('/google/logout', (req, res) => {

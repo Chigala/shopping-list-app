@@ -20,7 +20,7 @@ export const useRegisterFormLogic = () => {
     setConfirmVisible(prev => !prev)
   }
   const navigateToLogin = () => {
-    navigate('/login')
+    navigate('/')
   }
   const navigateToRegister = () => {
     navigate('/register')

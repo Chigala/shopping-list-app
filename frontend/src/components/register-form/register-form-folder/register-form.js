@@ -32,8 +32,16 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     handleSignInwithGoogle
   } = useRegisterFormLogic()
 
-  const { handleRegister, isLoading:handleRegisterLoading } = useHandleRegister()
-  const { handleLogin, isLoading, loginBlur,checkEmailLoading } = useHandleLogin()
+  const {
+    handleRegister,
+    isLoading: handleRegisterLoading
+  } = useHandleRegister()
+  const {
+    handleLogin,
+    isLoading,
+    loginBlur,
+    checkEmailLoading
+  } = useHandleLogin()
   const {
     register,
     handleSubmit,
@@ -83,7 +91,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
               <div className='space-y-8'>
                 <InputField
                   register={register}
-                  loginBlur = { loginBlur }
+                  loginBlur={loginBlur}
                   errors={errors.email}
                   inputType='text'
                   labelName='Email'
@@ -150,7 +158,14 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                 </div>
 
                 <div className=''>
-                  <LoginButton isRegister={isRegister} isLoading={isRegister?handleRegisterLoading : isLoading ||checkEmailLoading } />
+                  <LoginButton
+                    isRegister={isRegister}
+                    isLoading={
+                      isRegister
+                        ? handleRegisterLoading
+                        : isLoading || checkEmailLoading
+                    }
+                  />
                   {!isRegister && (
                     <GoogleLoginButton
                       isRegister={false}
@@ -175,7 +190,7 @@ export const InputField = ({
   placeholder,
   inputType,
   registerName,
-  loginBlur, 
+  loginBlur,
   icon
 }) => {
   return (
@@ -187,7 +202,7 @@ export const InputField = ({
             autoComplete={name}
             type={inputType}
             {...register(`${registerName}`, {
-              onBlur: loginBlur 
+              onBlur: loginBlur
             })}
             name={name}
             placeholder={placeholder}
@@ -234,7 +249,7 @@ export const PasswordFooter = ({
   show,
   visible,
   isWeb,
-  handleChangeVisible,
+  handleChangeVisible
 }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -254,8 +269,8 @@ export const PasswordFooter = ({
           </div>
           <p
             className='cursor-pointer'
-            onClick={()=> {
-              navigate("/forgot-password")
+            onClick={() => {
+              navigate('/forgot-password')
             }}
           >
             forgot password?
@@ -264,11 +279,12 @@ export const PasswordFooter = ({
       )}
       {visible ? (
         <div onClick={handleChangeVisible}>
-          <VisibilityOutlinedIcon className='scale-75 absolute  right-0 text-gray-500  top-3 cursor-pointer' />
+          <VisibilityOutlinedIcon className='scale-75 absolute right-0 text-gray-500 top-7 cursor-pointer' />
         </div>
       ) : (
         <div onClick={handleChangeVisible}>
-          <VisibilityOffOutlinedIcon className='scale-75 absolute  right-0 text-gray-500 top-3 cursor-pointer' />
+          <VisibilityOffOutlinedIcon className='scale-75 absolute  right-0 text-gray-500 top-7 cursor-pointer' />
+
         </div>
       )}
     </div>
@@ -283,11 +299,11 @@ export const ConfirmPasswordFooter = ({
     <div>
       {confirmVisible ? (
         <div onClick={handleChangeConfirmVisible}>
-          <VisibilityOutlinedIcon className='scale-75 absolute cursor-pointer right-0 text-gray-500  top-3' />
+          <VisibilityOutlinedIcon className='scale-75 absolute cursor-pointer right-0 text-gray-500  top-7' />
         </div>
       ) : (
         <div onClick={handleChangeConfirmVisible}>
-          <VisibilityOffOutlinedIcon className='scale-75 absolute cursor-pointer text-gray-500 right-0 top-3' />
+          <VisibilityOffOutlinedIcon className='scale-75 absolute cursor-pointer text-gray-500 right-0 top-7' />
         </div>
       )}
     </div>
@@ -331,7 +347,10 @@ const GoogleLoginButton = () => {
         </div>
         <div
           onClick={() => {
-            window.open('https://lister-app.herokuapp.com/api/google/login', '_self')
+            window.open(
+              'https://lister-app.herokuapp.com/api/google/login',
+              '_self'
+            )
           }}
           className='w-[95%]  md:w-4/5 shadow-md'
         >
