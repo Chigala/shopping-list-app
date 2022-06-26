@@ -12,7 +12,8 @@ email: {
 googleid:{
     type: String,
     
-} 
+},
+refreshToken:[],  
 }, {timestamps:true})
 
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });

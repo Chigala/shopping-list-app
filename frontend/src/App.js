@@ -23,16 +23,17 @@ import { CartWrapper } from './screen/cartWrapper'
 function App () {
   const dispatch = useDispatch()
   const [googleLogin] = useGoogleLoginMutation()
-  const loggedInUser = localStorage.getItem('auth')
-  const isLoggedIn = localStorage.getItem('isLoggedIn')
+  // const isLoggedIn = localStorage.getItem('isLoggedIn')
 
   //check if there is a req.user and then you authenticate the user
   useEffect(() => {
+  const loggedInUser = localStorage.getItem('auth')
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser)
       dispatch(updateAuth(foundUser))
     }
-  }, [loggedInUser])
+  }, [])
+
   useEffect(() => {
     const handleAuthGoogleLogin = async () => {
       const response = await googleLogin()

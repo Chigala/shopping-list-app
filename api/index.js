@@ -4,10 +4,14 @@ const app = express();
 const User = require(".//database/models/user");
 const cors = require("cors")
 const passport = require("passport"); 
-//passport middlewares
-require("./middlewares/passportAuth/password-jwt")
 
+//passport middlewares
+// require("./middlewares/passportAuth/password-jwt")
 require("./middlewares/passportAuth/google-auth")
+
+//my authentication middlware
+const verifyJwt = require("./middlewares/verifyJwt")
+
 const cookie = require("cookie-parser");
 const cookieSession = require("cookie-session");
 require("dotenv").config(); 
@@ -29,7 +33,6 @@ const productRoute = require("./routes/product");
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-// app.use(multer().array())
 app.use(cors({
   origin: "https://listershopper.netlify.app",
   credentials: true
@@ -54,15 +57,16 @@ app.use(passport.session())
 
 //setting up passport-local-mongoose plugin 
 passport.use(User.createStrategy());
-
-
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
 //route middlewares
 app.use("/api", userRoute);
- 
+
+//this middleware here is to protect all my endpoints
+app.use(verifyJwt) 
+
 app.use("/api", categoryRoute); 
 app.use("/api", listRoute); 
 app.use("/api", productRoute);

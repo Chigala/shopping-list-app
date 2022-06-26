@@ -1,7 +1,5 @@
 const User = require('../database/models/user')
-const jwt = require('jwt-simple')
 require('dotenv').config()
-const jwtSecret = process.env.JWT_SECRET
 const sendEmail = require('../services/nodemailer')
 const Jwt = require('jsonwebtoken')
 const Category = require('../database/models/category')
@@ -54,36 +52,76 @@ const register_user = async (req, res) => {
 const login_user = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email })
+    const cookies = req.cookies
     if (!user) {
       return res.status(200).json({
         msg: "The user doesn't exist in our database ",
         color: 'warning'
       })
     } else {
-      user.authenticate(req.body.password, function (
-        err,
-        model,
-        PasswordError
-      ) {
-        if (PasswordError) {
-          res
-            .status(200)
-            .json({ msg: 'Email and Password incorrect', color: 'warning' })
-        }
-        if (model) {
-          const payload = {
-            id: user.id,
-            expire: Date.now() + 1000 * 60 * 60 * 24 * 7 //7days
+      user.authenticate(
+        req.body.password,
+        async (err, model, PasswordError) => {
+          if (err) return console.log(err)
+          if (PasswordError) {
+            res
+              .status(200)
+              .json({ msg: 'Email and Password incorrect', color: 'warning' })
           }
-          const token = jwt.encode(payload, jwtSecret)
-          res.cookie('cookieToken', token, { httpOnly: true })
-          res.status(200).json({
-            msg: 'logged in successful ',
-            color: 'success',
-            loggedIn: true
-          })
+
+          if (model) {
+            const payload = {
+              id: model._id
+            }
+            const accessToken = Jwt.sign(
+              payload,
+              process.env.JWT_ACCESS_TOKEN_SECRET,
+              { expiresIn: '30s' }
+            )
+            const newRefreshToken = Jwt.sign(
+              payload,
+              process.env.JWT_REFRESH_TOKEN_SECRET,
+              { expiresIn: '1m' }
+            )
+
+            /* 
+            Scenario added here: 
+                1) User logs in but never uses RT and does not logout 
+                2) RT is stolen
+                3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
+            */
+            //when copying it in future don't try to overthink things, just copy it like that, the present you was smarter!
+            let newRefreshTokenArray = !cookies?.cookieToken
+              ? user.refreshToken
+              : user.refreshToken.filter(rt => rt !== cookies.cookieToken)
+
+            if (cookies?.cookieToken) {
+              const refreshToken = cookies.cookieToken
+              const foundToken = await User.findOne({ refreshToken })
+              if (!foundToken) {
+                newRefreshTokenArray = []
+              }
+
+              res.clearCookie('cookieToken', {
+                httpOnly: true,
+                sameSite: 'None',
+                secure: true
+              })
+            }
+            user.refreshToken = [...newRefreshTokenArray, newRefreshToken]
+            const result = await user.save()
+
+            res.cookie('cookieToken', newRefreshToken, {
+              httpOnly: true,
+              secure: true,
+              sameSite: 'None',
+              maxAge: 24 * 60 * 60 * 1000
+            })
+
+            res.json({ accessToken, user })
+          }
         }
-      })
+      )
     }
   } catch (err) {
     console.log(err)
@@ -95,12 +133,12 @@ const get_profile = (req, res, next) => {
   res.json({
     message: 'you made it to the secure route',
     user: req.user,
-    isLoggedIn: true,
-    token: req.query.jwttoken
+    isLoggedIn: true
+    // token: req.query.jwttoken
   })
 }
 //check if the gmail password already exists
-const check_password = async(req, res, next) => {
+const check_password = async (req, res, next) => {
   const { email } = req.body
   const user = await User.findOne({ email: email })
   if (user?.googleid) {
@@ -111,14 +149,39 @@ const check_password = async(req, res, next) => {
   }
 }
 //logout the user
-const logout = (req, res) => {
-  if (req.cookies['cookieToken']) {
-    res.clearCookie('cookieToken', { domain: 'localhost:3000', path: '/' })
-    res.status(200).json({ msg: 'you have been logged out', isLoggedIn: false })
-  } else {
-    req.logout
-    res.status(200).json({ msg: 'you a not logged in' })
+const logout = async (req, res) => {
+  const cookies = req.cookies
+  if (!cookies?.cookieToken) return res.sendStatus(204) //No content
+  const refreshToken = cookies.cookieToken
+
+  // Is refreshToken in db?
+  const foundUser = await User.findOne({ refreshToken })
+  if (!foundUser) {
+    res.clearCookie('cookieToken', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true
+    })
+    return res.sendStatus(204)
   }
+
+  // Delete refreshToken in db
+  foundUser.refreshToken = foundUser.refreshToken.filter(
+    rt => rt !== refreshToken
+  )
+  const result = await foundUser.save()
+  console.log(result)
+  req.logout()
+  res.clearCookie('cookieToken', { httpOnly: true, sameSite: 'None', secure: true })
+  res.sendStatus(204)
+
+  // if (req.cookies['cookieToken']) {
+  //   res.clearCookie('cookieToken', { domain: 'localhost:3000', path: '/' })
+  //   res.status(200).json({ msg: 'you have been logged out', isLoggedIn: false })
+  // } else {
+  //   req.logout
+  //   res.status(200).json({ msg: 'you a not logged in' })
+  // }
 }
 
 //forgot_password controller it sends the user an email with a token
@@ -183,6 +246,70 @@ const change_password = async (req, res) => {
   }
 }
 
+//get google get_profile
+const get_google_profile = async(req, res, next) => {
+ 
+  console.log(`this is the req user: ${req.user}`)
+  if (req.user) {
+  
+    try {
+      const cookies = req.cookies
+      const user = req.user
+      const foundUser = await User.findById(user._id)
+      const payload = {
+        id: user._id
+      }
+      const accessToken = Jwt.sign(
+        payload,
+        process.env.JWT_ACCESS_TOKEN_SECRET,
+        { expiresIn: '30s' }
+      )
+      const newRefreshToken = Jwt.sign(
+        payload,
+        process.env.JWT_REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: '1m'
+        }
+      )
+          /* 
+            Scenario added here: 
+                1) User logs in but never uses RT and does not logout 
+                2) RT is stolen
+                3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
+            */
+           //when copying it in future don't try to overthink things, just copy it like that, the present you was smarter! 
+          let newRefreshTokenArray = !cookies?.cookieToken
+            ? user.refreshToken
+            : user.refreshToken.filter(rt => rt !== cookies.cookieToken)
+
+          if (cookies?.cookieToken) {
+            const refreshToken = cookies.cookieToken
+            const foundToken = await User.findOne({ refreshToken })
+            if (!foundToken) {
+              newRefreshTokenArray = []
+            }
+
+            res.clearCookie('cookieToken', {
+              httpOnly: true,
+              sameSite: 'None',
+              secure: true
+            })
+          }
+          foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken]
+          const result =  await foundUser.save()
+          console.log("this is the result: ", result)
+
+      res.cookie('cookieToken', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+      res.json({accessToken,user })
+      
+    } catch (err) {
+      console.log(err)
+    }
+  } else {
+    res.status(200).json("no data for you ")
+  }
+}
+
 module.exports = {
   register_user,
   login_user,
@@ -191,5 +318,6 @@ module.exports = {
   change_password,
   get_profile,
   logout,
-  check_password
+  check_password, 
+  get_google_profile
 }

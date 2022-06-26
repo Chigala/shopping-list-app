@@ -1,21 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
-const getDataFromLocalStorage = () => {
-  // return JSON.parse(localStorage.getItem("auth")) || {};
-  return ''
-}
+
 const initialState = {
   screen: 'house',
   registerData: '',
   loginData: '',
-  isLoggedIn: false,   
-  isAuth: getDataFromLocalStorage(),
+  isLoggedIn: false,
+  token: null, 
+  user: null, 
+  isAuth: '',
   passwordParams: '',
   openCategorySearchBar: false,
   sendSelectedCategory: '',
   itemData: {},
-  listData: {}, 
-  listId: "", 
-  listHistoryId: "", 
+  listData: {},
+  listId: '',
+  listHistoryId: '',
 }
 
 export const componentSlice = createSlice({
@@ -40,25 +39,33 @@ export const componentSlice = createSlice({
     updatePasswordParams: (state, { payload }) => {
       state.passwordParams = payload
     },
-    openSearchBar: ( state, {payload} ) => {
-      state.openCategorySearchBar = payload;
+    openSearchBar: (state, { payload }) => {
+      state.openCategorySearchBar = payload
     },
     changeCategoryValue: (state, { payload }) => {
       state.sendSelectedCategory = payload
     },
-    sendDataToItem: (state, {payload}) => {
-      state.itemData = payload; 
-    }, 
-    updateListData: (state, {payload}) => {
-      state.listData = payload; 
+    setCredentials: (state, action) => {
+      const { user, accessToken } = action.payload
+      state.user = user
+      state.token = accessToken
     },
-    getListId: (state, {payload}) => {
-      state.listId = payload; 
-    }, 
-    getListHistoryId: (state, {payload}) => {
-      state.listHistoryId = payload; 
-    }, 
-    
+    logOut: (state, action) => {
+      state.user = null
+      state.token = null
+    },
+    sendDataToItem: (state, { payload }) => {
+      state.itemData = payload
+    },
+    updateListData: (state, { payload }) => {
+      state.listData = payload
+    },
+    getListId: (state, { payload }) => {
+      state.listId = payload
+    },
+    getListHistoryId: (state, { payload }) => {
+      state.listHistoryId = payload
+    }
   }
 })
 
@@ -73,8 +80,10 @@ export const {
   sendDataToItem,
   updateListData,
   getListId,
-  getListHistoryId, 
-  updateIsloggedIn
+  getListHistoryId,
+  updateIsloggedIn, 
+  setCredentials,
+  logOut
 } = componentSlice.actions
 
 export default componentSlice.reducer
