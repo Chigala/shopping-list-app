@@ -24,8 +24,8 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'https://listershopper.netlify.app/',
-    successRedirect: 'https://listershopper.netlify.app/homepage'
+    failureRedirect: `${process.env.FRONTEND_URL}/`,
+    successRedirect: `${process.env.FRONTEND_URL}/homepage`
   }),
 )
 router.get('/get-google-profile', authController.get_google_profile)

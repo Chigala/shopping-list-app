@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials, logOut } from '../component-slice'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://lister-app.herokuapp.com/api',
+  baseUrl: `${process.env.REACT_APP_BACKEND_URL}/api`,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().componentSlice.token

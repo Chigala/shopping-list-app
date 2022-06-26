@@ -9,7 +9,7 @@ const List = require('../../database/models/list')
 var params = {
   clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
   clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-  callbackURL: 'http://localhost:5000/api/google/callback',
+  callbackURL: `${process.env.BACKEND_URL}/api/google/callback`,
   passcallbackURL: true
 }
 

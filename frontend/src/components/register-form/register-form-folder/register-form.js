@@ -1,5 +1,4 @@
 import React from 'react'
-
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import HttpsOutlinedIcon from '@mui/icons-material/HttpsOutlined'
@@ -348,7 +347,7 @@ const GoogleLoginButton = () => {
         <div
           onClick={() => {
             window.open(
-              'https://lister-app.herokuapp.com/api/google/login',
+              `${process.env.REACT_APP_BACKEND_URL}/api/google/login`,
               '_self'
             )
           }}
