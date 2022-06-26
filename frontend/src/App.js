@@ -27,11 +27,11 @@ function App () {
 
   //check if there is a req.user and then you authenticate the user
   useEffect(() => {
-  const loggedInUser = localStorage.getItem('auth')
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser)
-      dispatch(updateAuth(foundUser))
-    }
+  // const loggedInUser = localStorage.getItem('auth')
+  //   if (loggedInUser) {
+  //     const foundUser = JSON.parse(loggedInUser)
+  //     dispatch(updateAuth(foundUser))
+  //   }
   }, [])
 
   useEffect(() => {

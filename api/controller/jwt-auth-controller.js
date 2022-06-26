@@ -54,19 +54,14 @@ const login_user = async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     const cookies = req.cookies
     if (!user) {
-      return res.status(200).json({
-        msg: "The user doesn't exist in our database ",
-        color: 'warning'
-      })
+      return res.sendStatus(404)
     } else {
       user.authenticate(
         req.body.password,
         async (err, model, PasswordError) => {
           if (err) return console.log(err)
           if (PasswordError) {
-            res
-              .status(200)
-              .json({ msg: 'Email and Password incorrect', color: 'warning' })
+            res.sendStatus(401)
           }
 
           if (model) {
@@ -172,7 +167,11 @@ const logout = async (req, res) => {
   const result = await foundUser.save()
   console.log(result)
   req.logout()
-  res.clearCookie('cookieToken', { httpOnly: true, sameSite: 'None', secure: true })
+  res.clearCookie('cookieToken', {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true
+  })
   res.sendStatus(204)
 
   // if (req.cookies['cookieToken']) {
@@ -247,11 +246,9 @@ const change_password = async (req, res) => {
 }
 
 //get google get_profile
-const get_google_profile = async(req, res, next) => {
- 
+const get_google_profile = async (req, res, next) => {
   console.log(`this is the req user: ${req.user}`)
   if (req.user) {
-  
     try {
       const cookies = req.cookies
       const user = req.user
@@ -271,42 +268,46 @@ const get_google_profile = async(req, res, next) => {
           expiresIn: '1m'
         }
       )
-          /* 
+      /* 
             Scenario added here: 
                 1) User logs in but never uses RT and does not logout 
                 2) RT is stolen
                 3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
             */
-           //when copying it in future don't try to overthink things, just copy it like that, the present you was smarter! 
-          let newRefreshTokenArray = !cookies?.cookieToken
-            ? user.refreshToken
-            : user.refreshToken.filter(rt => rt !== cookies.cookieToken)
+      //when copying it in future don't try to overthink things, just copy it like that, the present you was smarter!
+      let newRefreshTokenArray = !cookies?.cookieToken
+        ? user.refreshToken
+        : user.refreshToken.filter(rt => rt !== cookies.cookieToken)
 
-          if (cookies?.cookieToken) {
-            const refreshToken = cookies.cookieToken
-            const foundToken = await User.findOne({ refreshToken })
-            if (!foundToken) {
-              newRefreshTokenArray = []
-            }
+      if (cookies?.cookieToken) {
+        const refreshToken = cookies.cookieToken
+        const foundToken = await User.findOne({ refreshToken })
+        if (!foundToken) {
+          newRefreshTokenArray = []
+        }
 
-            res.clearCookie('cookieToken', {
-              httpOnly: true,
-              sameSite: 'None',
-              secure: true
-            })
-          }
-          foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken]
-          const result =  await foundUser.save()
-          console.log("this is the result: ", result)
+        res.clearCookie('cookieToken', {
+          httpOnly: true,
+          sameSite: 'None',
+          secure: true
+        })
+      }
+      foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken]
+      const result = await foundUser.save()
+      console.log('this is the result: ', result)
 
-      res.cookie('cookieToken', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
-      res.json({accessToken,user })
-      
+      res.cookie('cookieToken', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        maxAge: 24 * 60 * 60 * 1000
+      })
+      res.json({ accessToken, user })
     } catch (err) {
       console.log(err)
     }
   } else {
-    res.status(200).json("no data for you ")
+    res.sendStatus(401)
   }
 }
 
@@ -318,6 +319,6 @@ module.exports = {
   change_password,
   get_profile,
   logout,
-  check_password, 
+  check_password,
   get_google_profile
 }

@@ -6,9 +6,9 @@ import { Sidebar } from '../components/sidebar/sidebar'
 
 const HomePageWrapper = () => {
 
-  const newUser = useSelector(state => state.componentSlice.isLoggedIn)
+  const newUser = useSelector(state => state.componentSlice.token)
   const location = useLocation()
-  console.log(newUser)
+  // console.log(newUser)
   return newUser ? (
     <>
       <div className='flex'>

@@ -17,6 +17,11 @@ const cookieSession = require("cookie-session");
 require("dotenv").config(); 
 const sessionKey = process.env.SESSION_KEY; 
 
+//importing my cors credentials
+const credentials = require("./middlewares/credentials")
+//import your cors options
+const corsOptions = require("./config/cors-origin")
+
 ///the user route config file
 const userRoute = require(".//routes/user"); 
 
@@ -33,10 +38,10 @@ const productRoute = require("./routes/product");
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}))
+//cors credentials it is very important to be directly ontop of the cors
+app.use(credentials)
+
+app.use(cors(corsOptions))
 //cookie parser
 app.use(cookie()); 
 
