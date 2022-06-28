@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 import ListBarSlice from '../redux/component-slice'
-// import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { userApi } from './api/user-slice'
 import snackbarSlice from '../redux/snackbar'
 export default configureStore({
@@ -12,6 +11,8 @@ export default configureStore({
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(userApi.middleware),
+    devTools: true
+    
 })
 
 // setupListeners(configureStore.dispatch)

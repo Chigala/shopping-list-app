@@ -48,7 +48,7 @@ export const componentSlice = createSlice({
     setCredentials: (state, action) => {
       const { user, accessToken } = action.payload
       state.user = user
-      // state.isAuth = user
+      state.isAuth = user
       state.token = accessToken
     },
     logOut: (state, action) => {

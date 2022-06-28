@@ -2,9 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials, logOut } from '../component-slice'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.REACT_APP_BACKEND_URL}/api`,
+  // baseUrl: `${process.env.REACT_APP_BACKEND_URL}/api`,
+  baseUrl: "http://localhost:5000/api", 
+
   credentials: 'include',
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers, { getState,endpoint  }) => {
+    console.log("this is the endpoint:",endpoint)
     const token = getState().componentSlice.token
     if (token) {
       headers.set('authorization', `Bearer ${token}`)
@@ -18,9 +21,10 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (result?.error?.originalStatus === 403) {
     console.log('sending refresh token')
     // send refresh token to get new access token
-    const refreshResult = await baseQuery('/refresh', api, extraOptions)
+    const refreshResult = await baseQuery('/refresh', { ...api, endpoint: 'refresh' } , extraOptions)
     console.log(refreshResult)
     if (refreshResult?.data) {
+      console.log("there is a refreshed result data")
       const user = api.getState().componentSlice.user
       // store the new token
       api.dispatch(setCredentials({ ...refreshResult.data, user }))

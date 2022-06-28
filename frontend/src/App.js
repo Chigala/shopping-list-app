@@ -35,15 +35,15 @@ function App () {
   }, [])
 
   useEffect(() => {
-    const handleAuthGoogleLogin = async () => {
-      const response = await googleLogin()
-      const data = response.data
-      dispatch(updateAuth(data.user))
-      dispatch(updateIsloggedIn(data.isLoggedIn))
-      localStorage.setItem('auth', JSON.stringify(data.user))
-      localStorage.setItem('isLoggedIn', data.isLoggedIn)
-    }
-    handleAuthGoogleLogin()
+    // const handleAuthGoogleLogin = async () => {
+    //   const response = await googleLogin()
+    //   const data = response.data
+    //   dispatch(updateAuth(data.user))
+    //   dispatch(updateIsloggedIn(data.isLoggedIn))
+    //   localStorage.setItem('auth', JSON.stringify(data.user))
+    //   localStorage.setItem('isLoggedIn', data.isLoggedIn)
+    // }
+    // handleAuthGoogleLogin()
   }, [])
 
   return (

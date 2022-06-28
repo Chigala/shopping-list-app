@@ -39,9 +39,11 @@ app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 //cors credentials it is very important to be directly ontop of the cors
+
 app.use(credentials)
 
 app.use(cors(corsOptions))
+// app.use(cors({origin: 'http://localhost:3000', credentials: true}))
 //cookie parser
 app.use(cookie()); 
 
