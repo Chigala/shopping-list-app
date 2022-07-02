@@ -25,7 +25,7 @@ router.get(
   '/google/callback',
   passport.authenticate('google', {
     failureRedirect: `${process.env.FRONTEND_URL}/`,
-    successRedirect: `${process.env.FRONTEND_URL}/homepage`
+    successRedirect: `${process.env.FRONTEND_URL}/loading`
   }),
 )
 router.get('/get-google-profile', authController.get_google_profile)

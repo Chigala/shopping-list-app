@@ -13,6 +13,6 @@ export const LoginWrapper = () => {
     </>
   ) : (
     // <Navigate state={{ from: location }} replace to={'/homepage' }  />
-    <Navigate to={{ pathname: lastPagePathname, state: { prevPath: location.pathname } }} />
+    <Navigate to={{ pathname: lastPagePathname || "/homepage", state: { prevPath: location.pathname } }} />
   )
 }

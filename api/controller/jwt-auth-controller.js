@@ -294,7 +294,7 @@ const get_google_profile = async (req, res, next) => {
       }
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken]
       const result = await foundUser.save()
-      console.log('this is the result: ', result)
+      // console.log('this is the result: ', result)
 
       res.cookie('cookieToken', newRefreshToken, {
         httpOnly: true,
@@ -302,7 +302,7 @@ const get_google_profile = async (req, res, next) => {
         sameSite: 'None',
         maxAge: 24 * 60 * 60 * 1000
       })
-      res.json({ accessToken, user })
+      res.json({ accessToken,"user": result })
     } catch (err) {
       console.log(err)
     }

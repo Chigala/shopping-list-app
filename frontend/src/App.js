@@ -17,11 +17,12 @@ import { PositionedSnackbar } from './components/snackbar'
 import HomePageWrapper from './screen/homepage-wrapper'
 import { LoginWrapper } from './screen/login-wrapper'
 import { useGoogleLoginMutation } from './redux/api/user-slice'
-import { updateIsloggedIn } from './redux/component-slice'
+import { updateIsloggedIn,setCredentials } from './redux/component-slice'
 import { CartWrapper } from './screen/cartWrapper'
 import { PersistLogin } from './screen/persist'
 import Layout from './screen/layout'
 import  {LoadingScreen}  from './components/loadingScreen'
+import {updateSnackbar} from "./redux/snackbar"
 
 function App () {
   const dispatch = useDispatch()
@@ -29,25 +30,14 @@ function App () {
   // const isLoggedIn = localStorage.getItem('isLoggedIn')
 
   //check if there is a req.user and then you authenticate the user
-  useEffect(() => {
-  // const loggedInUser = localStorage.getItem('auth')
-  //   if (loggedInUser) {
-  //     const foundUser = JSON.parse(loggedInUser)
-  //     dispatch(updateAuth(foundUser))
-  //   }
-  }, [])
+  // useEffect(() => {
+  // // const loggedInUser = localStorage.getItem('auth')
+  // //   if (loggedInUser) {
+  // //     const foundUser = JSON.parse(loggedInUser)
+  // //     dispatch(updateAuth(foundUser))
+  // //   }
+  // }, [])
 
-  useEffect(() => {
-    // const handleAuthGoogleLogin = async () => {
-    //   const response = await googleLogin()
-    //   const data = response.data
-    //   dispatch(updateAuth(data.user))
-    //   dispatch(updateIsloggedIn(data.isLoggedIn))
-    //   localStorage.setItem('auth', JSON.stringify(data.user))
-    //   localStorage.setItem('isLoggedIn', data.isLoggedIn)
-    // }
-    // handleAuthGoogleLogin()
-  }, [])
 
   return (
     <>
