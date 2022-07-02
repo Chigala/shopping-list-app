@@ -10,6 +10,7 @@ import {
   setCredentials
 } from '../../redux/component-slice'
 import { updateSnackbar } from '../../redux/snackbar'
+import { useNavigate } from 'react-router-dom'
 
 export const useHandleLogin = () => {
   const [loginUser, { isLoading }] = useLoginUserMutation()
@@ -18,6 +19,7 @@ export const useHandleLogin = () => {
     { isLoading: checkEmailLoading }
   ] = useCheckGoogleEmailMutation()
   const [getProfile] = useGetProfileMutation()
+  const navigate = useNavigate(); 
   const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const dispatch = useDispatch()
   const loginBlur = async data => {
@@ -77,7 +79,7 @@ export const useHandleLogin = () => {
           })
         )
         dispatch(setCredentials(dataValue))
-        // changeState()
+        navigate("/homepage")
       }
     } catch (err) {
       console.log(err)

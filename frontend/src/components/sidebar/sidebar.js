@@ -24,7 +24,7 @@ export const Sidebar = () => {
   const listData = useSelector(state => state.componentSlice.listData)
   console.log(`this is the listData: ${listData}`)
   const navigateToCart = () => {
-    isWeb && navigate('/listbar')
+    isWeb ? navigate('/listbar') : navigate("/homepage") 
   }
   const [array, setArray] = React.useState([])
   const findingMe = Object.keys(array).map(element => element)

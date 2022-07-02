@@ -19,6 +19,9 @@ import { LoginWrapper } from './screen/login-wrapper'
 import { useGoogleLoginMutation } from './redux/api/user-slice'
 import { updateIsloggedIn } from './redux/component-slice'
 import { CartWrapper } from './screen/cartWrapper'
+import { PersistLogin } from './screen/persist'
+import Layout from './screen/layout'
+import  {LoadingScreen}  from './components/loadingScreen'
 
 function App () {
   const dispatch = useDispatch()
@@ -51,23 +54,29 @@ function App () {
       <Router>
         <PositionedSnackbar />
         <Routes>
+          <Route path="/" element={<Layout/>}>
           <Route path='/' element={<LoginWrapper />}>
             <Route index element={<Login />} />
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
+            <Route path='loading' element={<LoadingScreen />} />
           </Route>
-          <Route element={<HomePageWrapper />}>
-            <Route path='/homepage' element={<Homepage />} />
-            <Route path='history' element={<History />} />
-            <Route path='dashboard' element={<Dashboard />} />
-            <Route path='item' element={<Item />} />
-            <Route path='history-details' element={<HistoryDetails />} />
+          <Route element={<PersistLogin/>}>
+            <Route element={<HomePageWrapper />}>
+              <Route path='/homepage' element={<Homepage />} />
+              <Route path='history' element={<History />} />
+              <Route path='dashboard' element={<Dashboard />} />
+              <Route path='item' element={<Item />} />
+              <Route path='history-details' element={<HistoryDetails />} />
+            </Route>
+            <Route element={<CartWrapper />} />
+              <Route path='/listbar' element={<Cart />} />
+              <Route path='itemform' element={<ItemForm />} />
+            <Route />
+
           </Route>
-          <Route element={<CartWrapper />} />
-            <Route path='/listbar' element={<Cart />} />
-            <Route path='itemform' element={<ItemForm />} />
-          <Route />
+          </Route>
         </Routes>
       </Router>
     </>

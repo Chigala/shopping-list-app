@@ -3,6 +3,7 @@ import { Outlet, Navigate, useLocation } from 'react-router'
 import { useSelector } from 'react-redux'
 
 export const LoginWrapper = () => {
+  const lastPagePathname = localStorage.getItem('location')
   const user = useSelector(state => state.componentSlice.token)
   // console.log("this is the login wrapper user", user)
   const location = useLocation()
@@ -11,6 +12,7 @@ export const LoginWrapper = () => {
       <Outlet />
     </>
   ) : (
-    <Navigate state={{ from: location }} replace to={'/homepage' }  />
+    // <Navigate state={{ from: location }} replace to={'/homepage' }  />
+    <Navigate to={{ pathname: lastPagePathname, state: { prevPath: location.pathname } }} />
   )
 }

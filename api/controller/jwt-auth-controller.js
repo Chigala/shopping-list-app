@@ -76,7 +76,7 @@ const login_user = async (req, res) => {
             const newRefreshToken = Jwt.sign(
               payload,
               process.env.JWT_REFRESH_TOKEN_SECRET,
-              { expiresIn: '1m' }
+              { expiresIn: '15m' }
             )
 
             /* 
@@ -265,7 +265,7 @@ const get_google_profile = async (req, res, next) => {
         payload,
         process.env.JWT_REFRESH_TOKEN_SECRET,
         {
-          expiresIn: '1m'
+          expiresIn: '15m'
         }
       )
       /* 

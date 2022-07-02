@@ -6,9 +6,13 @@ import { Sidebar } from '../components/sidebar/sidebar'
 
 const HomePageWrapper = () => {
 
+
   const newUser = useSelector(state => state.componentSlice.token)
   const location = useLocation()
-  // console.log(newUser)
+  const path = location.pathname
+  console.log("this is the homepageWrapper location:",location.pathname)
+  localStorage.setItem("location",path)
+  console.log("this is the homepageWrapper new user:",newUser)
   return newUser ? (
     <>
       <div className='flex'>
@@ -24,7 +28,7 @@ const HomePageWrapper = () => {
       </div>
     </>
   ) : (
-    <Navigate to='/ ' state={{ from: location }} replace />
+    <Navigate to='/loading' state={{ from: location }} replace />
   )
 }
 export default HomePageWrapper
