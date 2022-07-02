@@ -38,6 +38,31 @@ function App () {
   // //   }
   // }, [])
 
+  useEffect(() => {
+    const handleAuthGoogleLogin = async () => {
+      const response = await googleLogin()
+      
+      const dataValue = response.data
+      console.log('this is the data value:', dataValue)
+      if (dataValue) {
+        dispatch(
+          updateSnackbar({
+            snackbarOpen: true,
+            snackbarType: 'success',
+            snackbarText: 'Logged in successful',
+            snackbarVertical: 'top',
+            snackbarHorizontal: 'center'
+          })
+        )
+        dispatch(setCredentials(dataValue))
+      }
+      // dispatch(updateAuth(data.user))
+      // dispatch(updateIsloggedIn(data.isLoggedIn))
+      // localStorage.setItem('auth', JSON.stringify(data.user))
+      // localStorage.setItem('isLoggedIn', data.isLoggedIn)
+    }
+    handleAuthGoogleLogin()
+  }, [])
 
   return (
     <>

@@ -251,6 +251,7 @@ const get_google_profile = async (req, res, next) => {
   if (req.user) {
     try {
       const cookies = req.cookies
+      console.log("this is the cookie: ", cookies)
       const user = req.user
       const foundUser = await User.findById(user._id)
       const payload = {
