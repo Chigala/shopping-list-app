@@ -126,7 +126,7 @@ export const userApi = createApi({
 
     googleLogout: builder.mutation({
       query: () => ({
-        url: `/google/logout`,
+        url: `/logout`,
         method: 'GET',
         credentials: 'include'
       })

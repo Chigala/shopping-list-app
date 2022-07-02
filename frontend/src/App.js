@@ -41,7 +41,6 @@ function App () {
   useEffect(() => {
     const handleAuthGoogleLogin = async () => {
       const response = await googleLogin()
-      
       const dataValue = response.data
       console.log('this is the data value:', dataValue)
       if (dataValue) {
@@ -55,6 +54,8 @@ function App () {
           })
         )
         dispatch(setCredentials(dataValue))
+      }else{
+        console.log("google login didn't work ")
       }
       // dispatch(updateAuth(data.user))
       // dispatch(updateIsloggedIn(data.isLoggedIn))
@@ -75,7 +76,6 @@ function App () {
             <Route path='register' element={<Register />} />
             <Route path='forgot-password' element={<ForgotPassword />} />
             <Route path='change-password/:id' element={<CreatePassword />} />
-            <Route path='loading' element={<LoadingScreen />} />
           </Route>
           <Route element={<PersistLogin/>}>
             <Route element={<HomePageWrapper />}>
@@ -84,13 +84,16 @@ function App () {
               <Route path='dashboard' element={<Dashboard />} />
               <Route path='item' element={<Item />} />
               <Route path='history-details' element={<HistoryDetails />} />
-            </Route>
-            <Route element={<CartWrapper />} />
               <Route path='/listbar' element={<Cart />} />
               <Route path='itemform' element={<ItemForm />} />
-            <Route />
+            </Route>
+            {/* <Route element={<CartWrapper />} />
+              <Route path='/listbar' element={<Cart />} />
+              <Route path='itemform' element={<ItemForm />} />
+            <Route /> */}
 
           </Route>
+            <Route path='loading' element={<LoadingScreen />} />
           </Route>
         </Routes>
       </Router>

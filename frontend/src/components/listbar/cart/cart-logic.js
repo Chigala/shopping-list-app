@@ -10,13 +10,18 @@ import {
 import { useDeleteProductFromListMutation } from '../../../redux/api/list-slice'
 import {
   useGetListNameQuery,
-  useUpdateListNameMutation
+  useUpdateListNameMutation,
+  useCancelTheListMutation,
+  useCompleteListMutation
 } from '../../../redux/api/list-slice'
 import { useGetListQuery } from '../../../redux/api/list-slice'
 import { updateListData, getListId,sendDataToItem } from '../../../redux/component-slice'
+import { updateSnackbar } from '../../../redux/snackbar'
 
 export const useShowCounter = () => {
   const navigate = useNavigate()
+  const [cancelList] = useCancelTheListMutation()
+  const [completeList] = useCompleteListMutation()
   const [productArray, setProductArray] = useState([])
   const [showCounter, setShowCounter] = useState(false)
   const [decrementCounter] = useDecrementProductMutation()
@@ -25,6 +30,7 @@ export const useShowCounter = () => {
 
   const listId = useSelector(state => state.componentSlice.listId)
   const userData = useSelector(state => state.componentSlice.isAuth)
+  const userId = userData._id
   const { data, isFetching } = useGetListQuery(userData._id)
   const { data: unpopulatedList, isLoading } = useGetListNameQuery(userData._id)
   const [buttonValue, setButtonValue] = useState(0)
@@ -41,11 +47,34 @@ export const useShowCounter = () => {
   const handleDialogClose = () => {
     setOpenDialog(false)
   }
-  const handleCancelDialog = () => {
+  const handleCancelDialog =async () => {
     console.log('cancelled the whole list ')
+    // console.log('this is the userId:', userId)
+    await cancelList({ userId,listId })
+        dispatch(
+          updateSnackbar({
+            snackbarOpen: true,
+            snackbarType: 'warning',
+            snackbarText: 'List cancelled',
+            snackbarVertical: 'top',
+            snackbarHorizontal: 'center'
+          })
+        )
+        handleDialogClose()
   }
-  const handleSubmitDialog = () => {
-    console.log('submitted the whole button ')
+  const handleSubmitDialog =async () => {
+    console.log('completed the list')
+    await completeList({ userId,listId }) 
+        handleDialogClose()
+        dispatch(
+          updateSnackbar({
+            snackbarOpen: true,
+            snackbarType: 'success',
+            snackbarText: 'List completed',
+            snackbarVertical: 'top',
+            snackbarHorizontal: 'center'
+          })
+        )
   }
   const handleShowInputField = async () => {
     setShowInputField(prev => !prev)
@@ -80,6 +109,7 @@ export const useShowCounter = () => {
   }, [buttonValue])
 
   const dispatch = useDispatch()
+
   useEffect(() => {
     const transformTheDataFromTheApi = () => {
       if (isFetching) {
@@ -92,8 +122,15 @@ export const useShowCounter = () => {
     dispatch(getListId(unpopulatedList?._id))
   }, [data])
   useEffect(() => {
+    dispatch(getListId(unpopulatedList?._id))
+
+  }, [])
+  
+
+  useEffect(() => {
     dispatch(updateListData(productArray))
   }, [productArray])
+
   const handleDecrement = () => {
     const obj = Object.keys(productArray).reduce((acc, curr) => {
       acc[curr] = [

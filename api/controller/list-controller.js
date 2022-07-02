@@ -66,6 +66,9 @@ const change_listName = async (req, res) => {
 const cancel_list = async (req, res) => {
   const listId = req.params.id
   const userId = req.params.userId
+  console.log("this is the cancelled listId from the backend:", listId)
+  console.log("this is the cancelled userId from the backend:", userId)
+
   const list = await List.findById(listId)
   list.listType = 'cancelled'
   list.save()

@@ -5,11 +5,15 @@ import { useGetCategoryQuery } from '../../redux/api/category-slice'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@mui/material'
 import { useHomepageLogic } from './homepage-logic'
+import { useMobile } from '../../helpers/react-responsive'
+import { useNavigate } from 'react-router-dom'
 
 export const Homepage = () => {
   const { handleSendDataToItemPage, sendProductToList } = useHomepageLogic()
   const state = useSelector(state => state.componentSlice.isAuth)
-  console.log("this is the homepage data:", state._id)
+  const mobile = useMobile()
+  const navigate = useNavigate()
+  console.log('this is the homepage data:', state._id)
   const { data, isFetching, isLoading, error } = useGetCategoryQuery(state._id)
 
   return (
@@ -46,17 +50,26 @@ export const Homepage = () => {
                     ) : (
                       value.items.map(product => {
                         return (
-                          <div key={product._id} className='flex group justify-around py-3 px-2 text-xs md:px-4 lg:px-8  items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white '>
+                          <div
+                            key={product._id}
+                            className='flex group justify-around py-3 px-2 text-xs md:px-4 lg:px-8  items-center border-[1px] rounded-md shadow-md cursor-pointer hover:bg-gray-500 hover:text-white '
+                          >
                             <div
-                            className=' w-fit'
+                              className=' w-fit'
                               key={product._id}
-                              onClick={() => handleSendDataToItemPage(product)}
+                              onClick={() => {
+                                handleSendDataToItemPage(product)
+                                mobile && navigate('/item')
+                              }}
                             >
                               <p>{product.name}</p>
                             </div>
                             <div
-                            className=''
-                              onClick={() => sendProductToList(product._id)}
+                              className=''
+                              onClick={() => {
+                                sendProductToList(product._id)
+                                mobile && navigate('/listbar')
+                              }}
                             >
                               <AddIcon className='text-[#C0C1C4] group-hover:text-white scale-75' />
                             </div>

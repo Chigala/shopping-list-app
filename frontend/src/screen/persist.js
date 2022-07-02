@@ -20,9 +20,6 @@ export const PersistLogin = () => {
         console.log("this is the persistData:",result.data)
         const apiData = result.data;
         dispatch(setCredentials(apiData))
-        if(result?.error?.originalStatus === 402){
-            navigate("/")
-        }
       } catch (err) {
         console.log(err)
       }

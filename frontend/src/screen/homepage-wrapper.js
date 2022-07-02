@@ -28,7 +28,7 @@ const HomePageWrapper = () => {
       </div>
     </>
   ) : (
-    <Navigate to='/loading' state={{ from: location }} replace />
+    <Navigate to='/' state={{ from: location }} replace />
   )
 }
 export default HomePageWrapper

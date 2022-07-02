@@ -15,15 +15,14 @@ import { useNavigate } from 'react-router-dom'
 export const useHandleLogin = () => {
   const [loginUser, { isLoading }] = useLoginUserMutation()
   const [
-    checkGoogleEmail,
-    { isLoading: checkEmailLoading }
+    checkGoogleEmail
+    
   ] = useCheckGoogleEmailMutation()
   const [getProfile] = useGetProfileMutation()
   const navigate = useNavigate(); 
   const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const dispatch = useDispatch()
   const loginBlur = async data => {
-    // console.log('this is the data after the login blur: ', data.target.value)
     const value = { email: data.target.value }
     console.log(value)
     await checkGoogleEmail(value)
@@ -90,6 +89,6 @@ export const useHandleLogin = () => {
     handleLogin,
     isLoading,
     loginBlur,
-    checkEmailLoading
+    
   }
 }

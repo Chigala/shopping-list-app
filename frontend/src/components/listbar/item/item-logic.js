@@ -41,7 +41,7 @@ export const useItemLogic = () => {
     isWeb ? dispatch(changeSidebarScreen(data)) : navigate('/listbar')
   }
   const handleBackToItemForm = () => {
-    const data = 'itemform'
+    const data = 'item-form'
     isWeb ? dispatch(changeSidebarScreen(data)) : navigate('/itemform')
   }
   const handleDialogOpen = () => {

@@ -39,7 +39,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
     handleLogin,
     isLoading,
     loginBlur,
-    checkEmailLoading
+    
   } = useHandleLogin()
   const {
     register,
@@ -162,7 +162,7 @@ export const RegisterForm = ({ loginText, registerText, isRegister }) => {
                     isLoading={
                       isRegister
                         ? handleRegisterLoading
-                        : isLoading || checkEmailLoading
+                        : isLoading 
                     }
                   />
                   {!isRegister && (
@@ -348,6 +348,7 @@ const GoogleLoginButton = () => {
           onClick={() => {
             window.open(
               `${process.env.REACT_APP_BACKEND_URL}/api/google/login`,
+              // "http://localhost:5000/api/google/login", 
               '_self'
             )
           }}

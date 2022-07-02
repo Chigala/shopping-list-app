@@ -60,22 +60,22 @@ export const listApi = userApi.injectEndpoints({
       invalidatesTags: ['unpopulatedList' ]
     }),
     cancelTheList : builder.mutation({
-      query: (listId) => {
+      query: ( {userId,listId} ) => {
         return {
-          url: `/list/cancel/${listId}`,
+          url: `/list/cancel/${userId}/${listId}`,
           method: 'PUT',
         }
       },
-      invalidatesTags: ['List']
+      invalidatesTags: ['List','unpopulatedList']
     }),
     completeList : builder.mutation({
-      query: (listId) => {
+      query: ({  userId,listId  }) => {
         return {
-          url: `/list/complete/${listId}`,
+          url: `/list/complete/${userId}/${listId}`,
           method: 'PUT',
         }
       },
-      invalidatesTags: ['List']
+      invalidatesTags: ['List','unpopulatedList']
     }),
     deleteProductFromList : builder.mutation({
       query: ({listId, value}) => {

@@ -5,7 +5,7 @@ export const useFormLogic = () => {
   const navigate = useNavigate(); 
   const dispatch = useDispatch()
   const handleChangeScreen = () => {
-    const data = 'items';
+    const data = 'default';
     (!window.matchMedia("(max-width: 767px)").matches)?dispatch(changeSidebarScreen(data)):navigate("/item")
   }
   return {

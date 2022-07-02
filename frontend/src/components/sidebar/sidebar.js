@@ -11,6 +11,8 @@ import Badge from '@mui/material/Badge'
 import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSideBarLogic } from './sidebar-logic'
+import { useDesktopMediaQuery,useTablet,useMobile,usePotrait } from '../../helpers/react-responsive'
+import { TailwindModal } from '../tailwindModal'
 
 const hoverVariant = {
   hover: {
@@ -18,14 +20,26 @@ const hoverVariant = {
   }
 }
 export const Sidebar = () => {
+  const desktop = useDesktopMediaQuery(); 
+  const tablet = useTablet(); 
+  const potrait = usePotrait();
+  const mobile = useMobile();
   const { handleLogout } = useSideBarLogic()
+  const [openDialog, setOpenDialog] = React.useState(false)
+  const handleDialogOpen = () => {
+    setOpenDialog(true)
+  }
+  const handleDialogClose = () => {
+    setOpenDialog(false)
+  }
   const navigate = useNavigate()
-  const isWeb = !window.matchMedia('(max-width: 767px)').matches
+  // const isWeb = !window.matchMedia('(max-width: 767px)').matches
   const listData = useSelector(state => state.componentSlice.listData)
   console.log(`this is the listData: ${listData}`)
   const navigateToCart = () => {
-    isWeb ? navigate('/listbar') : navigate("/homepage") 
+    mobile ? navigate('/listbar') : navigate("/homepage") 
   }
+  const complete = true; 
   const [array, setArray] = React.useState([])
   const findingMe = Object.keys(array).map(element => element)
   const badgeCountValue = findingMe
@@ -51,14 +65,27 @@ export const Sidebar = () => {
     return location.pathname === path
   }
 
+
   return (
     <>
       <motion.div className='flex flex-col  justify-between items-center h-screen py-4'>
         <motion.div
-          onClick={handleLogout}
+          onClick={handleDialogOpen}
           variants={hoverVariant}
           whileHover='hover'
         >
+      <TailwindModal
+        open={openDialog}
+        handleClickOpen={handleDialogOpen}
+        handleSubmit={handleLogout}
+        handleClose={handleDialogClose}
+        isComplete={complete}
+        text={"Do you want to logout?"}
+        heading={"Log out"}
+        leftButtonName={complete? "cancel": "back"}
+        rightButtonName={complete? "Logout": "cancel"}
+        handleCancel={handleDialogClose}
+      />
           <Tooltip
             title='Logout'
             placement='right-start'

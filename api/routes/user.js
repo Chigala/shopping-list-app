@@ -29,9 +29,6 @@ router.get(
       failureRedirect: `${process.env.FRONTEND_URL}/`,
       successRedirect: `${process.env.FRONTEND_URL}/loading`
     },
-    // (req, res) => {
-    //   res.redirect('/api/get-google-profile')
-    // }
   )
 )
 router.get('/get-google-profile', authController.get_google_profile)
